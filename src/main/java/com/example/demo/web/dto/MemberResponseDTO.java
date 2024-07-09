@@ -14,7 +14,7 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class JoinResultDTO{
         Long memberId;
-        String name;
+        String username;
         LocalDateTime createdAt;
 
     }
@@ -25,5 +25,8 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class LoginResultDTO{
         Long memberId;
+        String grantType;
+        String accessToken;
+        String refreshToken;
     }
 }

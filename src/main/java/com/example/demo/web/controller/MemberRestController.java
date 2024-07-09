@@ -1,8 +1,10 @@
 package com.example.demo.web.controller;
 
 import com.example.demo.apiPayload.ApiResponse;
+import com.example.demo.auth.JwtToken;
 import com.example.demo.converter.MemberConverter;
 import com.example.demo.domain.Member;
+import com.example.demo.repository.MemberRepository;
 import com.example.demo.service.MemberService.MemberCommandService;
 import com.example.demo.web.dto.MemberRequestDTO;
 import com.example.demo.web.dto.MemberResponseDTO;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/members")
 public class MemberRestController {
     private final MemberCommandService memberCommandService;
+    private final MemberRepository memberRepository;
     // 유효성 검사 적용 전 회원가입 API
     @PostMapping("/")
     @Operation(summary="회원가입 API", description="회원가입하는 API")
@@ -31,4 +34,13 @@ public class MemberRestController {
         Member member = memberCommandService.joinMember(request);
         return ApiResponse.onSuccess(MemberConverter.toJoinResultDTO(member));
     }
+
+    @PostMapping("/login")
+    @Operation(summary="로그인 API", description="jwt를 이용한 API")
+    public ApiResponse<MemberResponseDTO.LoginResultDTO> login (@RequestBody @Valid MemberRequestDTO.LoginDTO request){
+        JwtToken jwtToken = memberCommandService.Login(request);
+        Member member = memberRepository.findByEmail(request.getEmail());
+        return ApiResponse.onSuccess(MemberConverter.toLoginResultDTO(member, jwtToken));
+    }
+
 }

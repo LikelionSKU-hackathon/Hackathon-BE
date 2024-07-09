@@ -10,9 +10,8 @@ public class MemberRequestDTO {
     @Getter
     public static class JoinDTO{
         @NotBlank
-        String name;
-        @Size(min =5, max=12)
-        String userId;
+        String username;
+
         @NotNull
         String email;
         @Size(min =5, max=12)
@@ -22,5 +21,16 @@ public class MemberRequestDTO {
 
 
     }
+
+    @Getter
+    public static class LoginDTO{
+        @NotBlank
+        String email;
+
+        @Size(min =5, max=12)
+        String password;
+
+    }
+
 
 }
