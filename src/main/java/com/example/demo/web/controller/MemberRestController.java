@@ -1,7 +1,6 @@
 package com.example.demo.web.controller;
 
 import com.example.demo.apiPayload.ApiResponse;
-import com.example.demo.auth.JwtToken;
 import com.example.demo.converter.MemberConverter;
 import com.example.demo.domain.Member;
 import com.example.demo.repository.MemberRepository;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,10 +38,8 @@ public class MemberRestController {
 
     @PostMapping("/login")
     @Operation(summary="로그인 API", description="jwt를 이용한 API")
-    public ApiResponse<MemberResponseDTO.LoginResultDTO> login (@RequestBody @Valid MemberRequestDTO.LoginDTO request){
-        JwtToken jwtToken = memberCommandService.Login(request);
-        Member member = memberRepository.findByEmail(request.getEmail());
-        return ApiResponse.onSuccess(MemberConverter.toLoginResultDTO(member, jwtToken));
+    public ApiResponse<MemberResponseDTO.LoginResultDTO> login (@RequestBody @Valid MemberRequestDTO.LoginDTO request) {
+        MemberResponseDTO.LoginResultDTO loginResultDTO = memberCommandService.login(request);
+        return ApiResponse.onSuccess(loginResultDTO);
     }
-
 }

@@ -25,7 +25,7 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class LoginResultDTO{
         Long memberId;
-        String grantType;
+        String email;
         String accessToken;
         String refreshToken;
     }
