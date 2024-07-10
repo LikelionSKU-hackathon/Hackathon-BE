@@ -4,23 +4,39 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 
 public class MemberRequestDTO {
     @Getter
+    @Setter
     public static class JoinDTO{
         @NotBlank
-        String name;
-        @Size(min =5, max=12)
-        String userId;
+        String username;
         @NotNull
         String email;
         @Size(min =5, max=12)
         String password;
+        @Size(min =5, max=12)
+        String confirmPassword;
         @NotNull
         Integer age;
+        @NotNull
+        private String role;
 
 
     }
+
+    @Getter
+    @Setter
+    public static class LoginDTO{
+        @NotBlank
+        String email;
+
+        @Size(min =5, max=12)
+        String password;
+
+    }
+
 
 }
