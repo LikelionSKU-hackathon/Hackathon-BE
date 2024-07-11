@@ -6,25 +6,29 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 
 public class MemberRequestDTO {
     @Getter
     @Setter
-    public static class JoinDTO{
+    public static class JoinDTO {
         @NotBlank
         String username;
         @NotNull
         String email;
-        @Size(min =5, max=12)
+        @Size(min = 5, max = 12)
         String password;
-        @Size(min =5, max=12)
+        @Size(min = 5, max = 12)
         String confirmPassword;
         @NotNull
         Integer age;
         @NotNull
         private String role;
+        @NotNull
+        private String profileImage;
 
-
+        List<Long> memberKeyword;
     }
 
     @Getter
