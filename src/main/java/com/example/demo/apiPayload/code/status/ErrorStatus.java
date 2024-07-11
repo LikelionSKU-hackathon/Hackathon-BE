@@ -32,6 +32,10 @@ public enum ErrorStatus implements BaseErrorCode {
     JWT_UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "JWT4007","지원하지 않는 JWT 토큰입니다."),
     //UNAUTHORIZED
     JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT4008","유효한 JWT 토큰이 없습니다."),
+    KEYWORD_NOT_FOUND(HttpStatus.NOT_FOUND,"Key4004","키워드가 존재하지 않습니다"),
+
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"member4004","멤버가 존재하지 않습니다");
+
     ;
 
 

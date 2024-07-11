@@ -2,8 +2,14 @@ package com.example.demo.service.MemberService;
 
 import com.example.demo.Provider.JwtProvider;
 
+import com.example.demo.apiPayload.code.status.ErrorStatus;
+import com.example.demo.apiPayload.exception.handler.KeywordHandler;
 import com.example.demo.converter.MemberConverter;
+import com.example.demo.domain.Keyword;
 import com.example.demo.domain.Member;
+import com.example.demo.domain.enums.SocialType;
+import com.example.demo.domain.mapping.MemberKeyword;
+import com.example.demo.repository.KeywordRepository;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.web.dto.JwtToken;
 import com.example.demo.web.dto.MemberRequestDTO;
@@ -15,9 +21,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -26,6 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberCommandServiceImpl implements MemberCommandService{
     private final MemberRepository memberRepository;
+    private final KeywordRepository keywordRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     @Override
@@ -34,17 +43,20 @@ public class MemberCommandServiceImpl implements MemberCommandService{
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
 
-        // 비밀번호와 확인 비밀번호 일치 확인
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-
-        // Member 생성
         Member newMember = MemberConverter.toMember(request, encodedPassword);
+        List<Keyword> keywordList = request.getMemberKeyword().stream()
+                        .map(keyword->{
+                            return keywordRepository.findById(keyword).orElseThrow(()-> new KeywordHandler(ErrorStatus.KEYWORD_NOT_FOUND));
+                        }).collect(Collectors.toList());
+        List<MemberKeyword> memberKeywordList = MemberConverter.toMemberKeywordList(keywordList);
+        memberKeywordList.forEach(memberKeyword -> {memberKeyword.setMember(newMember);});
 
+        newMember.setMemberKeywordList(memberKeywordList);
         return memberRepository.save(newMember);
     }
 
@@ -59,3 +71,4 @@ public class MemberCommandServiceImpl implements MemberCommandService{
         return MemberConverter.toLoginResultDTO(member, jwtToken);
     }
 }
+
