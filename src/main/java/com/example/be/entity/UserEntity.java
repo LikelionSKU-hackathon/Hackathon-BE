@@ -26,7 +26,7 @@ public class UserEntity {
     private String userId;
     @Column(name = "user_name")
     private String userName;
-    @Column(name = "user_email")
+    @Column(name = "user_email", nullable = true)
     private String userEmail;
     @Column(name = "user_login_type")
     private String userLoginType;
@@ -44,6 +44,15 @@ public class UserEntity {
         this.userEmail = userEmail;
         this.userLoginType = userLoginType;
         this.userRole = userRole;
+    }
+    public UserEntity(String userId, String userName,
+                      String userLoginType,
+                      String userRole) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userLoginType = userLoginType;
+        this.userRole = userRole;
+        this.userEmail = "";
     }
 
 }

@@ -48,10 +48,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 userId = ((String) responseMap.get("id")).substring(0, ((String) responseMap.get("id")).length() - 1);
                 userEmail = (String) responseMap.get("email");
                 userName = (String) responseMap.get("name");
-                // 로그 추가
-                log.info("Fetched userId (naver): {}", userId);
-                log.info("Fetched userEmail (naver): {}", userEmail);
-                log.info("Fetched userName (naver): {}", userName);
 
                 userEntity = new UserEntity(userId, userName, userEmail, "naver", "ROLE_USER");
             }
@@ -61,6 +57,30 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             userEmail = oAuth2User.getAttribute("email");
             userName = oAuth2User.getAttribute("name");
             userEntity = new UserEntity(userId, userName, userEmail, "google", "ROLE_USER");
+        }
+        else if (oauthClientName.equals("kakao")) {
+            Object idObj = oAuth2User.getAttribute("id");
+            if (idObj instanceof Long) {
+                userId = String.valueOf(idObj);
+            } else {
+                // 예상치 못한 타입의 id가 반환된 경우
+                throw new IllegalArgumentException("Unexpected id type: " + idObj.getClass().getName());
+            }
+
+            Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+            if (kakaoAccount != null) {
+                Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+                if (profile != null) {
+                    userName = (String) profile.get("nickname");
+                } else {
+                    userName = "Unknown";  // 기본값 설정 또는 예외 처리
+                }
+
+                userEntity = new UserEntity(userId, userName, "kakao", "ROLE_USER");
+            } else {
+                userName = "Unknown";  // 기본값 설정 또는 예외 처리
+                userEntity = new UserEntity(userId, userName, "kakao", "ROLE_USER");
+            }
         }
         userRepository.save(userEntity);
 
