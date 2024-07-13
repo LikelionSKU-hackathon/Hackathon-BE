@@ -22,7 +22,7 @@ import java.util.Optional;
 public class MemberRestController {
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
-    private final MemberRepository memberRepository;
+
     // 유효성 검사 적용 전 회원가입 API
     @PostMapping("/")
     @Operation(summary="회원가입 API", description="회원가입하는 API")
