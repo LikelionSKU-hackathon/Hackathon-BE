@@ -12,4 +12,5 @@ public class TestController {
     public String getProtectedResource(@AuthenticationPrincipal String username) {
         return "Hello " + username + ", this is a protected resource.";
     }
+
 }
