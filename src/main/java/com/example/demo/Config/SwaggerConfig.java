@@ -29,8 +29,8 @@ public class SwaggerConfig {
     }
     private Info apiInfo() {
         return new Info()
-                .title("MovieSite API 명세서")
-                .description("MovieSite API 명세서")
+                .title("쓰담쓰담 API 명세서")
+                .description("쓰담쓰담 API 명세서")
                 .version("1.0.0");
     }
 }
