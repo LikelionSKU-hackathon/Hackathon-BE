@@ -48,7 +48,7 @@ public class Member extends BaseEntity  {
     private String profileImage;
 
     @OneToMany(mappedBy ="member", cascade= CascadeType.ALL)
-    private List<MemberKeyword> memberKeywordList = new ArrayList<>();
+    private  List<MemberKeyword> memberKeywordList = new ArrayList<>();
 
 
 }
