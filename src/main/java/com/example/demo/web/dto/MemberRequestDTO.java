@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,12 +24,10 @@ public class MemberRequestDTO {
         String confirmPassword;
         @NotNull
         Integer age;
-        @NotNull
-        private String role;
-        @NotNull
-        private String profileImage;
 
         List<Long> memberKeyword;
+
+        private  MultipartFile profileImage;
     }
 
     @Getter

@@ -4,6 +4,7 @@ import com.example.demo.Provider.JwtProvider;
 
 import com.example.demo.apiPayload.code.status.ErrorStatus;
 import com.example.demo.apiPayload.exception.handler.KeywordHandler;
+import com.example.demo.aws.s3.AmazonS3Manager;
 import com.example.demo.converter.MemberConverter;
 import com.example.demo.domain.Keyword;
 import com.example.demo.domain.Member;
@@ -37,6 +38,8 @@ public class MemberCommandServiceImpl implements MemberCommandService{
     private final KeywordRepository keywordRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final AmazonS3Manager s3Manager;
+
     @Override
     public Member joinMember(MemberRequestDTO .JoinDTO request){
         if (memberRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -46,16 +49,15 @@ public class MemberCommandServiceImpl implements MemberCommandService{
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-
+        String profileImageUrl = s3Manager.uploadFile(request.getProfileImage());
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-        Member newMember = MemberConverter.toMember(request, encodedPassword);
+        Member newMember = MemberConverter.toMember(request, encodedPassword, profileImageUrl);
         List<Keyword> keywordList = request.getMemberKeyword().stream()
                         .map(keyword->{
                             return keywordRepository.findById(keyword).orElseThrow(()-> new KeywordHandler(ErrorStatus.KEYWORD_NOT_FOUND));
                         }).collect(Collectors.toList());
         List<MemberKeyword> memberKeywordList = MemberConverter.toMemberKeywordList(keywordList);
         memberKeywordList.forEach(memberKeyword -> {memberKeyword.setMember(newMember);});
-
         newMember.setMemberKeywordList(memberKeywordList);
         return memberRepository.save(newMember);
     }

@@ -23,14 +23,14 @@ public class MemberConverter {
                 .username(member.getUsername())
                 .build();
     }
-    public static Member toMember(MemberRequestDTO.JoinDTO request, String encodedPassword){
+    public static Member toMember(MemberRequestDTO.JoinDTO request, String encodedPassword, String profileImageUrl){
         return Member.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .age(request.getAge())
                 .password(encodedPassword)
                 .confirmPassword(request.getConfirmPassword())
-                .profileImage(request.getProfileImage())
+                .profileImage(profileImageUrl)
                 .memberKeywordList(new ArrayList<>())
                 .build();
     }

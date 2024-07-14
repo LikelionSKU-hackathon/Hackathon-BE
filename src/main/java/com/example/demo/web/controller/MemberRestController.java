@@ -11,8 +11,11 @@ import com.example.demo.web.dto.MemberResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -24,13 +27,13 @@ public class MemberRestController {
     private final MemberQueryService memberQueryService;
 
     // 유효성 검사 적용 전 회원가입 API
-    @PostMapping("/")
+    @PostMapping(value="/",consumes = "multipart/form-data")
+
     @Operation(summary="회원가입 API", description="회원가입하는 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공")
-
     })
-    public ApiResponse<MemberResponseDTO.JoinResultDTO> join (@RequestBody @Valid MemberRequestDTO.JoinDTO request) {
+    public ApiResponse<MemberResponseDTO.JoinResultDTO> join (@ModelAttribute @Valid MemberRequestDTO.JoinDTO request) {
         Member member = memberCommandService.joinMember(request);
         return ApiResponse.onSuccess(MemberConverter.toJoinResultDTO(member));
     }
