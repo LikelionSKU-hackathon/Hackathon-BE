@@ -71,18 +71,18 @@ public class WebSecurityConfig {
             return http.build();
         }
 
-        @Bean
-        protected CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.addAllowedOrigin("*");
-            configuration.addAllowedHeader("*");
-            configuration.addAllowedMethod("*");
+    @Bean
+    protected CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*");  // Spring Boot 2.4 이상에서는 addAllowedOriginPattern 사용
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
 
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
 
-            return source;
-        }
+        return source;
+    }
 
         @Bean
         public PasswordEncoder passwordEncoder() {
