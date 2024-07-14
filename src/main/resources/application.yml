@@ -2,9 +2,9 @@ spring:
   application:
     name: demo
   datasource:
-    url: jdbc:mysql://localhost:3306/moviesite
-    username: root
-    password: 1234
+    url: ${aws.db.url}
+    username: ${aws.db.username}
+    password: ${aws.db.url}
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
