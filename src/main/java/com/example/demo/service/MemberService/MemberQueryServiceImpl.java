@@ -33,15 +33,7 @@ public class MemberQueryServiceImpl implements MemberQueryService{
 
     }
 
-    @Override
-    public List<Keyword> getKeyword(String age_group){
-        List<Keyword> keywords = keywordRepository.findByAgeGroup(age_group);
-        if (keywords.isEmpty()) {
-            throw new MemberHandler(ErrorStatus.KEYWORD_NOT_FOUND);
-        }
-        return keywords;
 
-    }
 
 
 
