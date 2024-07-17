@@ -1,6 +1,8 @@
 package com.example.demo.web.dto;
 
 
+import com.example.demo.domain.Keyword;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,7 +51,6 @@ public class MemberResponseDTO {
         String refreshToken;
     }
 
-
     @Builder
     @Getter
     @NoArgsConstructor
@@ -69,7 +70,6 @@ public class MemberResponseDTO {
         private List<MemberKeyword> keywordList;
 
     }
-
 
 
 

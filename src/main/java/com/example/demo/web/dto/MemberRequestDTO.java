@@ -25,8 +25,6 @@ public class MemberRequestDTO {
         @NotNull
         String age_group;
 
-        List<Long> memberKeyword;
-
         private  MultipartFile profileImage;
     }
 
@@ -46,6 +44,9 @@ public class MemberRequestDTO {
     public static class setKeywordDTO{
         List<Long> keywordIdList;
     }
+
+
+
 
 
 }

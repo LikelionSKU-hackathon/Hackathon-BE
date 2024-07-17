@@ -67,6 +67,7 @@ public class MemberRestController {
         return ApiResponse.onSuccess(MemberConverter.toKeywordResultDTO(age_group, keywords));
     }
 
+
     @PostMapping("/{memberId}/keywords")
     @Operation(summary="키워드 선택 API", description="회원의 키워드 선택 API")
     public ApiResponse<MemberResponseDTO.setKeywordResultDTO> setKeyword(

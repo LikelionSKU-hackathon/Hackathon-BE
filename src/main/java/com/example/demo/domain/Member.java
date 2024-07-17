@@ -50,6 +50,8 @@ public class Member extends BaseEntity  {
     @OneToMany(mappedBy ="member", cascade= CascadeType.ALL)
     private  List<MemberKeyword> memberKeywordList = new ArrayList<>();
 
+    @OneToMany(mappedBy="member", cascade=CascadeType.ALL)
+    private List<Diary> diaryList = new ArrayList<>();
 
 }
 
