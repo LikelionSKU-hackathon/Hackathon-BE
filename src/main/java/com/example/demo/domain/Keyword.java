@@ -19,4 +19,7 @@ public class Keyword extends BaseEntity {
 
     private String name;
 
+    @Column(nullable=false, length =50)
+    private String ageGroup;
+
 }

@@ -52,13 +52,6 @@ public class MemberCommandServiceImpl implements MemberCommandService{
         String profileImageUrl = s3Manager.uploadFile(request.getProfileImage());
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Member newMember = MemberConverter.toMember(request, encodedPassword, profileImageUrl);
-        List<Keyword> keywordList = request.getMemberKeyword().stream()
-                        .map(keyword->{
-                            return keywordRepository.findById(keyword).orElseThrow(()-> new KeywordHandler(ErrorStatus.KEYWORD_NOT_FOUND));
-                        }).collect(Collectors.toList());
-        List<MemberKeyword> memberKeywordList = MemberConverter.toMemberKeywordList(keywordList);
-        memberKeywordList.forEach(memberKeyword -> {memberKeyword.setMember(newMember);});
-        newMember.setMemberKeywordList(memberKeywordList);
         return memberRepository.save(newMember);
     }
 

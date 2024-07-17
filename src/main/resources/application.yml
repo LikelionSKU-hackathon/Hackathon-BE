@@ -51,21 +51,14 @@ spring:
       max-request-size: 20MB
 
 cloud:
-    aws:
-      s3:
-        bucket: skuhackathon-s3
-      region:
-        static: ap-northeast-2
-      stack:
-        auto: false
-      credentials:
-        accessKey: ${AWS_ACCESS_KEY_ID}
-        secretKey: ${AWS_SECRET_ACCESS_KEY}
+  aws:
+    s3:
+      bucket: skuhackathon-s3
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
 jwt-secret: ThisStatementISJwtSecretKeyDoNotUseThisStatement
-
-
-
-
-
-
-
