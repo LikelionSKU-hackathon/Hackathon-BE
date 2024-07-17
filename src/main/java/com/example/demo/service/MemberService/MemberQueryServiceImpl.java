@@ -23,6 +23,15 @@ public class MemberQueryServiceImpl implements MemberQueryService{
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
+    @Override
+    public List<Keyword> getKeyword(String age_group){
+        List<Keyword> keywords = keywordRepository.findByAgeGroup(age_group);
+        if (keywords.isEmpty()) {
+            throw new MemberHandler(ErrorStatus.KEYWORD_NOT_FOUND);
+        }
+        return keywords;
+
+    }
 
     @Override
     public List<Keyword> getKeyword(String age_group){

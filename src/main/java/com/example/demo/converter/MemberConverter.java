@@ -27,7 +27,8 @@ public class MemberConverter {
         return Member.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .age_group(request.getAge_group())
+                .ageGroup(request.getAge_group())
+
                 .password(encodedPassword)
                 .confirmPassword(request.getConfirmPassword())
                 .profileImage(profileImageUrl)
@@ -65,6 +66,14 @@ public class MemberConverter {
         return MemberResponseDTO.KeywordResultDTO.builder()
                 .age_group(ageGroup)
                 .KeywordList(keywords)
+                .build();
+    }
+
+
+    public static MemberResponseDTO.setKeywordResultDTO toSetKeywordResultDTO(Member member) {
+        return MemberResponseDTO.setKeywordResultDTO.builder()
+                .memberId(member.getId())
+                .keywordList(member.getMemberKeywordList())
                 .build();
     }
 

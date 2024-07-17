@@ -3,6 +3,7 @@ package com.example.demo.domain.mapping;
 import com.example.demo.domain.Keyword;
 import com.example.demo.domain.Member;
 import com.example.demo.domain.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class MemberKeyword extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
+    @JsonIgnore
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)

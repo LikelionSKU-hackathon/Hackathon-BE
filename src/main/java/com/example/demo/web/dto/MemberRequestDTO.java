@@ -39,6 +39,12 @@ public class MemberRequestDTO {
 
     }
 
+    @Getter
+    @Setter
+    public static class setKeywordDTO{
+        List<Long> keywordIdList;
+    }
+
 
 
 

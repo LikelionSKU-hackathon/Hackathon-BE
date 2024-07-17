@@ -1,10 +1,17 @@
 package com.example.demo.web.dto;
 
+
 import com.example.demo.domain.Keyword;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import com.example.demo.domain.Keyword;
+import com.example.demo.domain.mapping.MemberKeyword;
+import lombok.*;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,5 +60,17 @@ public class MemberResponseDTO {
         List<Keyword> KeywordList;
 
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class setKeywordResultDTO {
+        private Long memberId;
+        private List<MemberKeyword> keywordList;
+
+    }
+
+
 
 }
