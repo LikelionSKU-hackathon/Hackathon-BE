@@ -32,8 +32,8 @@ public class Member extends BaseEntity  {
     @Column(nullable = false, length = 40)
     private String email;
 
-    @Column(nullable = false)
-    private Integer age;
+    @Column(nullable = false, length = 50)
+    private String age_group;
 
     @Column(nullable = false, length = 60)
     private String password;

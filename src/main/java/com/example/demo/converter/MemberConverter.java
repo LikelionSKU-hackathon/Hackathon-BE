@@ -27,21 +27,14 @@ public class MemberConverter {
         return Member.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .age(request.getAge())
+                .age_group(request.getAge_group())
                 .password(encodedPassword)
                 .confirmPassword(request.getConfirmPassword())
                 .profileImage(profileImageUrl)
                 .memberKeywordList(new ArrayList<>())
                 .build();
     }
-    public static List<MemberKeyword> toMemberKeywordList(List<Keyword> keywordList){
-        return keywordList.stream()
-                .map(keyword ->
-                        MemberKeyword.builder()
-                                .keyword(keyword)
-                                .build()
-                ).collect(Collectors.toList());
-    }
+
     public static MemberResponseDTO.MyPageDTO toMypageDTO(Member member) {
         return MemberResponseDTO.MyPageDTO.builder()
                 .username(member.getUsername())
@@ -67,4 +60,14 @@ public class MemberConverter {
                 .refreshToken(jwtToken.getRefreshToken())
                 .build();
     }
+
+    public static MemberResponseDTO.KeywordResultDTO toKeywordResultDTO(String ageGroup,List<Keyword> keywords){
+        return MemberResponseDTO.KeywordResultDTO.builder()
+                .age_group(ageGroup)
+                .KeywordList(keywords)
+                .build();
+    }
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.demo.web.dto;
 
+import com.example.demo.domain.Keyword;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,4 +43,15 @@ public class MemberResponseDTO {
         String accessToken;
         String refreshToken;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class KeywordResultDTO{
+        String age_group;
+        List<Keyword> KeywordList;
+
+    }
+
 }

@@ -23,9 +23,7 @@ public class MemberRequestDTO {
         @Size(min = 5, max = 12)
         String confirmPassword;
         @NotNull
-        Integer age;
-
-        List<Long> memberKeyword;
+        String age_group;
 
         private  MultipartFile profileImage;
     }
@@ -40,6 +38,9 @@ public class MemberRequestDTO {
         String password;
 
     }
+
+
+
 
 
 }
