@@ -9,6 +9,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public interface MemberCommandService {
     Member joinMember(MemberRequestDTO.JoinDTO request);
     MemberResponseDTO.LoginResultDTO login (MemberRequestDTO.LoginDTO request);
-
+    Member setKeyword(MemberRequestDTO.setKeywordDTO request, Long memberId);
 
 }

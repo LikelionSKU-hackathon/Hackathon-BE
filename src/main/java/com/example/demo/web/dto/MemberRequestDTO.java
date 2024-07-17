@@ -23,7 +23,7 @@ public class MemberRequestDTO {
         @Size(min = 5, max = 12)
         String confirmPassword;
         @NotNull
-        Integer age;
+        String age_group;
 
         List<Long> memberKeyword;
 
@@ -39,6 +39,12 @@ public class MemberRequestDTO {
         @Size(min =5, max=12)
         String password;
 
+    }
+
+    @Getter
+    @Setter
+    public static class setKeywordDTO{
+        List<Long> keywordIdList;
     }
 
 

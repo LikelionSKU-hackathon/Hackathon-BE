@@ -72,5 +72,30 @@ public class MemberCommandServiceImpl implements MemberCommandService{
 
         return MemberConverter.toLoginResultDTO(member, jwtToken);
     }
+
+    @Override
+    public Member setKeyword(MemberRequestDTO.setKeywordDTO request, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow();
+
+        List<Keyword> keywords = keywordRepository.findAllById(request.getKeywordIdList());
+        if (keywords.size() != request.getKeywordIdList().size()) {
+            throw new IllegalArgumentException("One or more Keyword IDs are invalid.");
+        }
+
+        List<MemberKeyword> memberKeywords = keywords.stream()
+                .map(keyword -> MemberKeyword.builder()
+                        .member(member)
+                        .keyword(keyword)
+                        .build())
+                .collect(Collectors.toList());
+
+        member.getMemberKeywordList().clear();
+        member.getMemberKeywordList().addAll(memberKeywords);
+
+        memberRepository.save(member);
+
+        return member;
+    }
 }
 
