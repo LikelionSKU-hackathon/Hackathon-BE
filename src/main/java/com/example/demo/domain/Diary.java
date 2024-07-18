@@ -17,7 +17,7 @@ public class Diary extends BaseEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false, length = 60)
@@ -45,6 +45,9 @@ public class Diary extends BaseEntity {
 
     @OneToMany(mappedBy ="diary", cascade= CascadeType.ALL)
     private List<AIComment> AICommentList = new ArrayList<>();
+
+
+
 
 
 
