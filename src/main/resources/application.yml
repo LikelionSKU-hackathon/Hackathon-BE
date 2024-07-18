@@ -63,7 +63,6 @@ cloud:
       secretKey: ${AWS_SECRET_ACCESS_KEY}
 jwt-secret: ThisStatementISJwtSecretKeyDoNotUseThisStatement
 
-
 openai:
   model: gpt-4o
   api:
