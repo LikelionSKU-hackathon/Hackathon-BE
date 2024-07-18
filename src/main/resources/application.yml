@@ -62,3 +62,9 @@ cloud:
       accessKey: ${AWS_ACCESS_KEY_ID}
       secretKey: ${AWS_SECRET_ACCESS_KEY}
 jwt-secret: ThisStatementISJwtSecretKeyDoNotUseThisStatement
+
+openai:
+  model: gpt-4o
+  api:
+    url: https://api.openai.com/v1/chat/completions
+    key: ${AWS_OPENAI_KEY}
