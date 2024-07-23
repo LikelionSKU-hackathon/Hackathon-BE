@@ -1,5 +1,7 @@
 package com.example.demo.service.AIService;
 
+import com.example.demo.apiPayload.code.status.ErrorStatus;
+import com.example.demo.apiPayload.exception.handler.AiHandler;
 import com.example.demo.domain.AIComment;
 import com.example.demo.domain.Diary;
 import com.example.demo.repository.AICommentRepository;
@@ -55,7 +57,7 @@ public class AICommentServiceImpl implements AICommentService {
         ChatResponseDTO chatResponseDTO = restTemplate.postForObject(apiUrl, requestEntity, ChatResponseDTO.class);
 
         if (chatResponseDTO == null || chatResponseDTO.getChoices() == null || chatResponseDTO.getChoices().isEmpty()) {
-            throw new RuntimeException("AI response is null or empty");
+            throw new AiHandler(ErrorStatus.AI_RESPONSE_NULL_OR_EMPTY);
         }
 
         String aiComment = chatResponseDTO.getChoices().get(0).getMessage().getContent();

@@ -33,7 +33,10 @@ public class MemberRestController {
 
     @Operation(summary="회원가입 API", description="회원가입하는 API")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad Request, 요청 파라미터 오류"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Conflict, 멤버가 이미 존재함"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized, 비밀번호 불일치")
     })
     public ApiResponse<MemberResponseDTO.JoinResultDTO> join (@ModelAttribute @Valid MemberRequestDTO.JoinDTO request) {
         Member member = memberCommandService.joinMember(request);
@@ -44,7 +47,8 @@ public class MemberRestController {
 
     @Operation(summary="소셜 회원가입 API", description="추가적인 소셜 회원가입하는 API")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",description = "NotFound, 찾을 수 없음")
     })
     public ApiResponse<MemberResponseDTO.JoinResultDTO> join (@ModelAttribute @Valid MemberRequestDTO.SocialJoinDTO request, @PathVariable (name="memberId") Long memberId) {
         Member member = memberCommandService.SocialJoinMember(request, memberId);

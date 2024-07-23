@@ -34,9 +34,13 @@ public enum ErrorStatus implements BaseErrorCode {
     JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT4008","유효한 JWT 토큰이 없습니다."),
     KEYWORD_NOT_FOUND(HttpStatus.NOT_FOUND,"Key4004","키워드가 존재하지 않습니다"),
 
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"member4004","멤버가 존재하지 않습니다");
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"member4004","멤버가 존재하지 않습니다"),
 
-    ;
+    MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "member4005", "멤버가 이미 존재합니다"),
+    PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "password4001", "비밀번호가 일치하지 않습니다"),
+    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "auth4001", "아이디 또는 비밀번호가 일치하지 않습니다"),
+    INVALID_KEYWORD_IDS(HttpStatus.BAD_REQUEST, "keyword4006", "하나 이상의 키워드 ID가 유효하지 않습니다"),
+    AI_RESPONSE_NULL_OR_EMPTY(HttpStatus.BAD_REQUEST, "AI4007", "AI 응답이 null이거나 비어 있습니다");
 
 
     private final HttpStatus httpStatus;
