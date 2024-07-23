@@ -9,4 +9,8 @@ public interface MemberQueryService {
     Member getMypage (Long MemberId);
 
     List<Keyword> getKeyword(String age_group);
+
+    Boolean checkEmail(String email);
+
+    Boolean checkUsername(String username);
 }

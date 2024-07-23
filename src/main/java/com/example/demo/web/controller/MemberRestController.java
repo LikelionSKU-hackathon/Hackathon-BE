@@ -89,4 +89,18 @@ public class MemberRestController {
         return ApiResponse.onSuccess(MemberConverter.toSetKeywordResultDTO(member));
     }
 
+    @GetMapping("/checkEmail/{email}")
+    @Operation(summary = "이메일 중복 조회 API", description = "중복된 이메일이 있는지 조회하는 API")
+    public ApiResponse<Boolean> checkEmail(@PathVariable(name="email") String email) {
+        Boolean result = memberQueryService.checkEmail(email);
+        return ApiResponse.onSuccess(result);
+    }
+
+    @GetMapping("/checkUsername/{username}")
+    @Operation(summary="닉네임 중복 조회 API", description="중복된 닉네임이 있는지 조회하는 API")
+    public ApiResponse<Boolean> checkUsername(@PathVariable(name="username") String username) {
+        Boolean result = memberQueryService.checkUsername(username);
+        return ApiResponse.onSuccess(result);
+    }
+
 }
