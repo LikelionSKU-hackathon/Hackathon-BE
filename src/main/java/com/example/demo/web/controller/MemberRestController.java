@@ -40,6 +40,17 @@ public class MemberRestController {
         return ApiResponse.onSuccess(MemberConverter.toJoinResultDTO(member));
     }
 
+    @PutMapping(value="/{memberId}",consumes = "multipart/form-data")
+
+    @Operation(summary="소셜 회원가입 API", description="추가적인 소셜 회원가입하는 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공")
+    })
+    public ApiResponse<MemberResponseDTO.JoinResultDTO> join (@ModelAttribute @Valid MemberRequestDTO.SocialJoinDTO request, @PathVariable (name="memberId") Long memberId) {
+        Member member = memberCommandService.SocialJoinMember(request, memberId);
+        return ApiResponse.onSuccess(MemberConverter.toJoinResultDTO(member));
+    }
+
     @GetMapping("/{memberId}")
     @Operation(summary="마이페이지 API", description="회원정보 조회 API")
     @ApiResponses({

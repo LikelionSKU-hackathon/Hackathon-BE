@@ -1,5 +1,6 @@
 package com.example.demo.service.MemberService;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.demo.Provider.JwtProvider;
 
 import com.example.demo.apiPayload.code.status.ErrorStatus;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 //쓰기
@@ -53,6 +55,15 @@ public class MemberCommandServiceImpl implements MemberCommandService{
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Member newMember = MemberConverter.toMember(request, encodedPassword, profileImageUrl);
         return memberRepository.save(newMember);
+    }
+
+    @Override
+    public Member SocialJoinMember(MemberRequestDTO.SocialJoinDTO request, Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException("Member not found with id " + memberId));
+        String profileImageUrl = s3Manager.uploadFile(request.getProfileImage());
+        MemberConverter.toSocialMember(request, member, profileImageUrl);
+        return memberRepository.save(member);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.example.demo.converter;
 
 import com.example.demo.domain.Keyword;
 import com.example.demo.domain.Member;
+import com.example.demo.domain.enums.Role;
 import com.example.demo.domain.mapping.MemberKeyword;
 import com.example.demo.web.dto.JwtToken;
 import com.example.demo.web.dto.MemberRequestDTO;
@@ -28,12 +29,19 @@ public class MemberConverter {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .ageGroup(request.getAge_group())
-
+                .role(Role.valueOf(request.getRole()))
                 .password(encodedPassword)
                 .confirmPassword(request.getConfirmPassword())
                 .profileImage(profileImageUrl)
                 .memberKeywordList(new ArrayList<>())
                 .build();
+    }
+    public static void toSocialMember(MemberRequestDTO.SocialJoinDTO request, Member member, String profileImageUrl) {
+        member.setUsername(request.getUsername());
+        member.setAgeGroup(request.getAge_group());
+        member.setProfileImage(profileImageUrl);
+
+
     }
 
     public static MemberResponseDTO.MyPageDTO toMypageDTO(Member member) {

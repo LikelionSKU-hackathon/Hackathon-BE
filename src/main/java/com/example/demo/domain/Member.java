@@ -1,6 +1,7 @@
 package com.example.demo.domain;
 
 import com.example.demo.domain.common.BaseEntity;
+import com.example.demo.domain.enums.Role;
 import com.example.demo.domain.enums.SocialType;
 import com.example.demo.domain.mapping.MemberKeyword;
 import com.fasterxml.jackson.databind.introspect.MemberKey;
@@ -40,6 +41,10 @@ public class Member extends BaseEntity  {
 
     @Column(nullable = false, length = 60)
     private String confirmPassword;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     private SocialType socialType;

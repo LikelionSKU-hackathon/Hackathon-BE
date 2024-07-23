@@ -24,8 +24,21 @@ public class MemberRequestDTO {
         String confirmPassword;
         @NotNull
         String age_group;
+        @NotNull
+        String role;
 
         private  MultipartFile profileImage;
+    }
+
+    @Getter
+    @Setter
+    public static class SocialJoinDTO{
+        @NotBlank
+        String username;
+        @NotNull
+        String age_group;
+
+        private MultipartFile profileImage;
     }
 
     @Getter
@@ -44,6 +57,9 @@ public class MemberRequestDTO {
     public static class setKeywordDTO{
         List<Long> keywordIdList;
     }
+
+
+
 
 
 
