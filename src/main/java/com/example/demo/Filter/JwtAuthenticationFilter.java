@@ -8,8 +8,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,14 +21,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     private final JwtProvider jwtProvider;
     private final MemberRepository memberRepository;
 
@@ -33,39 +38,49 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = parseToken(request);
+            log.info("Parsed token: {}", token);
             if (token != null) {
-                String userId = jwtProvider.validate(token);
+                String email = jwtProvider.getEmailFromToken(token);
+                log.info("Email from token: {}", email);
 
-                if (userId != null) {
-                    // User ID로 멤버 엔티티 가져오기
-                    Optional<Member> memberEntity = memberRepository.findByEmail(userId);
+                if (email != null) {
+                    Member member = memberRepository.findByEmail(email).orElse(null);
 
-                    if (memberEntity.isPresent()) {
-                        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-                        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, null);
+                    if (member != null) {
+                        String role = member.getRole().getKey();
+                        List<GrantedAuthority> authorities = new ArrayList<>();
+                        authorities.add(new SimpleGrantedAuthority(role));
+                        log.info("사용자 권한 설정 - 이메일: {}, 권한: {}", email, role);
+                        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
                         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                        // 컨텍스트에 토큰 값을 설정
+                        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                         securityContext.setAuthentication(authenticationToken);
-                        // 컨텍스트 등록
                         SecurityContextHolder.setContext(securityContext);
+                    } else {
+                        log.info("No member found for email: {}", email);
                     }
+                } else {
+                    log.info("Invalid token: email is null");
                 }
+            } else {
+                log.info("No token found in request");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error in JWT authentication filter", e);
         }
 
         filterChain.doFilter(request, response);
     }
 
     private String parseToken(HttpServletRequest request) {
-        // 헤더에서 Authorization 값을 가져옴
         String bearerToken = request.getHeader("Authorization");
-        // 토큰이 null이 아니고 Bearer로 시작하면 Bearer 부분을 제거하고 반환
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
     }
 }
+
+
+

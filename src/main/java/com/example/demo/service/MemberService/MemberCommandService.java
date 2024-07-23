@@ -10,5 +10,5 @@ public interface MemberCommandService {
     Member joinMember(MemberRequestDTO.JoinDTO request);
     MemberResponseDTO.LoginResultDTO login (MemberRequestDTO.LoginDTO request);
     Member setKeyword(MemberRequestDTO.setKeywordDTO request, Long memberId);
-
+    Member SocialJoinMember(MemberRequestDTO.SocialJoinDTO request, Long memberId);
 }
