@@ -19,11 +19,13 @@ import java.util.Optional;
 public class MemberQueryServiceImpl implements MemberQueryService{
     private final MemberRepository memberRepository;
     private final KeywordRepository keywordRepository;
+    //마이페이지 조회
     @Override
     public Member getMypage(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
+    //키워드 조회
     @Override
     public List<Keyword> getKeyword(String age_group){
         List<Keyword> keywords = keywordRepository.findByAgeGroup(age_group);
@@ -33,13 +35,14 @@ public class MemberQueryServiceImpl implements MemberQueryService{
         return keywords;
 
     }
+    //이메일 중복확인
     @Override
     public Boolean checkEmail(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
         return member.isPresent();
     }
 
-
+    //닉네임 중복확인
     @Override
     public Boolean checkUsername(String username){
         Optional<Member> member = memberRepository.findByUsername(username);

@@ -5,6 +5,7 @@ import com.example.demo.Provider.JwtProvider;
 
 import com.example.demo.apiPayload.code.status.ErrorStatus;
 import com.example.demo.apiPayload.exception.handler.KeywordHandler;
+import com.example.demo.apiPayload.exception.handler.MemberHandler;
 import com.example.demo.aws.s3.AmazonS3Manager;
 import com.example.demo.converter.MemberConverter;
 import com.example.demo.domain.Keyword;
@@ -17,19 +18,9 @@ import com.example.demo.web.dto.JwtToken;
 import com.example.demo.web.dto.MemberRequestDTO;
 import com.example.demo.web.dto.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 //쓰기
@@ -41,42 +32,42 @@ public class MemberCommandServiceImpl implements MemberCommandService{
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final AmazonS3Manager s3Manager;
-
+    //일반 회원가입
     @Override
     public Member joinMember(MemberRequestDTO .JoinDTO request){
         if (memberRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+            throw new MemberHandler(ErrorStatus.MEMBER_ALREADY_EXIST);
         }
 
         if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new MemberHandler(ErrorStatus.PASSWORD_MISMATCH);
         }
         String profileImageUrl = s3Manager.uploadFile(request.getProfileImage());
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Member newMember = MemberConverter.toMember(request, encodedPassword, profileImageUrl);
         return memberRepository.save(newMember);
     }
-
+    //소셜 회원가입
     @Override
     public Member SocialJoinMember(MemberRequestDTO.SocialJoinDTO request, Long memberId){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException("Member not found with id " + memberId));
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         String profileImageUrl = s3Manager.uploadFile(request.getProfileImage());
         MemberConverter.toSocialMember(request, member, profileImageUrl);
         return memberRepository.save(member);
     }
-
+    //로그인
     @Override
     public MemberResponseDTO.LoginResultDTO login(MemberRequestDTO.LoginDTO request) {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .filter(it -> passwordEncoder.matches(request.getPassword(), it.getPassword()))
-                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다."));
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.INVALID_CREDENTIALS));
 
         JwtToken jwtToken = jwtProvider.generateToken(member);
 
         return MemberConverter.toLoginResultDTO(member, jwtToken);
     }
-
+    //키워드 설정
     @Override
     public Member setKeyword(MemberRequestDTO.setKeywordDTO request, Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -84,7 +75,7 @@ public class MemberCommandServiceImpl implements MemberCommandService{
 
         List<Keyword> keywords = keywordRepository.findAllById(request.getKeywordIdList());
         if (keywords.size() != request.getKeywordIdList().size()) {
-            throw new IllegalArgumentException("One or more Keyword IDs are invalid.");
+            throw new KeywordHandler(ErrorStatus.INVALID_KEYWORD_IDS);
         }
 
         List<MemberKeyword> memberKeywords = keywords.stream()
