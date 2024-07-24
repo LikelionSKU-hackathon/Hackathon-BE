@@ -39,9 +39,6 @@ public class Member extends BaseEntity  {
     @Column(nullable = false, length = 60)
     private String password;
 
-    @Column(nullable = false, length = 60)
-    private String confirmPassword;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private Role role;

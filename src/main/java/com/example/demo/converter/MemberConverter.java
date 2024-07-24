@@ -31,7 +31,7 @@ public class MemberConverter {
                 .ageGroup(request.getAge_group())
                 .role(Role.valueOf(request.getRole()))
                 .password(encodedPassword)
-                .confirmPassword(request.getConfirmPassword())
+
                 .profileImage(profileImageUrl)
                 .memberKeywordList(new ArrayList<>())
                 .build();

@@ -1,8 +1,6 @@
 package com.example.demo.web.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,12 +14,15 @@ public class MemberRequestDTO {
     public static class JoinDTO {
         @NotBlank
         String username;
+
         @NotNull
+        @Email(message = "이메일 형식이 잘못되었습니다.")
         String email;
+
         @Size(min = 5, max = 12)
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z]).{5,12}$", message = "비밀번호는 숫자와 문자를 포함해야 합니다.")
         String password;
-        @Size(min = 5, max = 12)
-        String confirmPassword;
+
         @NotNull
         String age_group;
         @NotNull

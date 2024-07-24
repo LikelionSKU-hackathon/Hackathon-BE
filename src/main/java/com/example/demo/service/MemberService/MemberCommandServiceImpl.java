@@ -39,9 +39,6 @@ public class MemberCommandServiceImpl implements MemberCommandService{
             throw new MemberHandler(ErrorStatus.MEMBER_ALREADY_EXIST);
         }
 
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new MemberHandler(ErrorStatus.PASSWORD_MISMATCH);
-        }
         String profileImageUrl = s3Manager.uploadFile(request.getProfileImage());
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Member newMember = MemberConverter.toMember(request, encodedPassword, profileImageUrl);

@@ -8,6 +8,7 @@ import com.example.demo.web.dto.MemberResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class DiaryConverter {
@@ -22,4 +23,29 @@ public class DiaryConverter {
                 .content(diary.getContent())
                 .build();
     }
+
+    public static DiaryResponseDTO.PlusDiaryResultDTO diaryListDTO(List<Diary> diaries) {
+        List<DiaryResponseDTO.DiaryDTO> diaryDTOList = diaries.stream()
+                .map(diary -> DiaryResponseDTO.DiaryDTO.builder()
+                        .diaryId(diary.getId())
+                        .title(diary.getTitle())
+                        .content(diary.getContent())
+                        .mood(diary.getMood())
+                        .member(DiaryResponseDTO.MemberDTO.builder()
+                                .memberId(diary.getMember().getId())
+                                .username(diary.getMember().getUsername())
+                                .ageGroup(diary.getMember().getAgeGroup())
+                                .profileImage(diary.getMember().getProfileImage())
+                                .keywordList(diary.getMember().getMemberKeywordList().stream()
+                                        .map(memberKeyword->memberKeyword.getKeyword().getCategory())
+                                        .collect(Collectors.toList()))
+                                .build())
+                        .build())
+                .collect(Collectors.toList());
+
+        return DiaryResponseDTO.PlusDiaryResultDTO.builder()
+                .diaryList(diaryDTOList)
+                .build();
+    }
+
 }

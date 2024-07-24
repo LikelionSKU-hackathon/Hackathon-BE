@@ -1,6 +1,7 @@
 package com.example.demo.domain;
 
 import com.example.demo.domain.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,7 @@ public class Diary extends BaseEntity {
     @Column(nullable = false, length = 60)
     private String title;
 
-    private boolean is_public;
+    private boolean isPublic;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="member_id")
