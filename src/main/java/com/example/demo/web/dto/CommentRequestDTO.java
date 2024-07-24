@@ -5,9 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DiaryRequestDTO {
-    private String title;
+
+public class CommentRequestDTO {
     private String content;
-    private boolean isPublic;
+    private Long diaryId;
     private Long memberId;
+
 }
