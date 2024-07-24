@@ -21,6 +21,9 @@ public class AIQuestion extends BaseEntity {
     @Column(nullable = false, length = 200)
     private String content;
 
+    @Column(nullable = false, length =100)
+    private String category;
+
     @OneToMany(mappedBy ="aiQuestion", cascade= CascadeType.ALL)
     private List<Diary> diaryList = new ArrayList<>();
 

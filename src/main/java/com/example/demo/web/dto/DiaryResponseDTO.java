@@ -1,8 +1,6 @@
 package com.example.demo.web.dto;
 
-import com.example.demo.domain.AIComment;
-import com.example.demo.domain.Diary;
-import com.example.demo.domain.Mood;
+import com.example.demo.domain.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,4 +22,38 @@ public class DiaryResponseDTO {
         List<String> aiCommentList;
 
     }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PlusDiaryResultDTO {
+        List<DiaryDTO> diaryList;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DiaryDTO {
+        Long diaryId;
+        String title;
+        String content;
+        Mood mood;
+        MemberDTO member;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberDTO {
+        Long memberId;
+        String username;
+        String ageGroup;
+        String profileImage;
+        List<String> keywordList;
+    }
+
+
+
 }

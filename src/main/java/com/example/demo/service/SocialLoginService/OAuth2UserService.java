@@ -60,7 +60,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .profileImage("")
                     .ageGroup("")
                     .password("")
-                    .confirmPassword("")
                     .build();
             return memberRepository.save(newMember);
         });
