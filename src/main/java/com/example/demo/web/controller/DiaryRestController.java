@@ -2,6 +2,7 @@ package com.example.demo.web.controller;
 
 import com.example.demo.apiPayload.ApiResponse;
 import com.example.demo.converter.DiaryConverter;
+import com.example.demo.domain.AIQuestion;
 import com.example.demo.domain.Diary;
 import com.example.demo.service.AIService.AICommentService;
 import com.example.demo.service.DiaryService.DiaryQueryService;
@@ -18,7 +19,7 @@ import java.util.List;
 public class DiaryRestController {
     private final AICommentService aiCommentService;
     private final DiaryQueryService diaryQueryService;
-    @GetMapping("/{diaryId}/ai")
+    @GetMapping("/{diaryId}/aiComment")
     @Operation(summary="AI 댓글 조회 API", description="AI 댓글을 생성하고 조회하는 API")
     public ApiResponse<DiaryResponseDTO.AiCommentResultDTO> aicomment(@PathVariable(name="diaryId")Long diaryId){
         Diary diary = aiCommentService.generateAIComment(diaryId);
@@ -30,6 +31,13 @@ public class DiaryRestController {
     public ApiResponse<DiaryResponseDTO.PlusDiaryResultDTO> diaryList(){
         List<Diary> diaries = diaryQueryService.getDiaryList();
         return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
+    }
+
+    @GetMapping("/{memberId}/aiQuestion")
+    @Operation(summary="AI 주제 생성 API", description="사용자 키워드 기반 AI 주제 생성 API")
+    public ApiResponse<DiaryResponseDTO.AIQuestionDTO> aiQuestion(@PathVariable(name="memberId")Long memberId){
+        AIQuestion aiQuestion = aiCommentService.generateAIQuestion(memberId);
+        return ApiResponse.onSuccess(DiaryConverter.aiQuestionDTO(aiQuestion));
     }
 
 

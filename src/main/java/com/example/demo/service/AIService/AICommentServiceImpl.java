@@ -2,10 +2,13 @@ package com.example.demo.service.AIService;
 
 import com.example.demo.apiPayload.code.status.ErrorStatus;
 import com.example.demo.apiPayload.exception.handler.AiHandler;
+import com.example.demo.apiPayload.exception.handler.MemberHandler;
 import com.example.demo.domain.AIComment;
+import com.example.demo.domain.AIQuestion;
 import com.example.demo.domain.Diary;
-import com.example.demo.repository.AICommentRepository;
-import com.example.demo.repository.DiaryRepository;
+import com.example.demo.domain.Member;
+import com.example.demo.domain.mapping.MemberQuestion;
+import com.example.demo.repository.*;
 import com.example.demo.web.dto.ChatDTO.ChatRequestDTO;
 import com.example.demo.web.dto.ChatDTO.ChatResponseDTO;
 import org.springframework.http.HttpEntity;
@@ -15,6 +18,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -28,7 +35,10 @@ public class AICommentServiceImpl implements AICommentService {
     private String apiUrl;
 
     private final AICommentRepository aiCommentRepository;
+    private final AIQuestionRepository aiQuestionRepository;
+    private final MemberQuestionRepository memberQuestionRepository;
     private final DiaryRepository diaryRepository;
+    private final MemberRepository memberRepository;
     private final RestTemplate restTemplate;
     private final HttpHeaders httpHeaders;
 
@@ -71,5 +81,72 @@ public class AICommentServiceImpl implements AICommentService {
 
 
         return diary;
+    }
+    @Override
+    public AIQuestion generateAIQuestion(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        List<String> keywordList = member.getMemberKeywordList() != null ?
+                member.getMemberKeywordList().stream()
+                        .map(memberKeyword -> memberKeyword.getKeyword().getCategory())
+                        .collect(Collectors.toList()) :
+                new ArrayList<>();
+        String ageGroup = member.getAgeGroup();
+        String keyword1 = keywordList.size() > 0 ? keywordList.get(0) : "";
+        String keyword2 = keywordList.size() > 1 ? keywordList.get(1) : "";
+        String keyword3 = keywordList.size() > 2 ? keywordList.get(2) : "";
+
+        String prompt = "You are an AI diary subject question generator that generates Korean answers based on your three keywords and age group. " +
+                "Based on the user's current three keywords and age group you provide, you should create a diary theme that can reflect on your day. " +
+                "Your answers should always be polite. " +
+                "Considering that the three keywords I currently provide are the user's current situation, I set one of the user's current keywords as the main keyword and create a diary topic related to this. " +
+                "You have to write a diary topic in one line. " +
+                "You must return the selected main keyword and generated diary theme in the form (main keyword, diary topic).\n\n" +
+                "keywords: " + keyword1 + ", " + keyword2 + ", " + keyword3 + "\n" +
+                "age group: " + ageGroup;
+
+        String aiResponse;
+        boolean validResponse = false;
+        do {
+            ChatRequestDTO chatRequest = new ChatRequestDTO(model, prompt);
+            HttpEntity<ChatRequestDTO> requestEntity = new HttpEntity<>(chatRequest, httpHeaders);
+
+            ChatResponseDTO chatResponseDTO = restTemplate.postForObject(apiUrl, requestEntity, ChatResponseDTO.class);
+
+            if (chatResponseDTO == null || chatResponseDTO.getChoices() == null || chatResponseDTO.getChoices().isEmpty()) {
+                throw new AiHandler(ErrorStatus.AI_RESPONSE_NULL_OR_EMPTY);
+            }
+
+            aiResponse = chatResponseDTO.getChoices().get(0).getMessage().getContent();
+
+            // Check if the response matches the expected format
+            if (aiResponse.matches("\\(.*\\,.*\\)")) {
+                validResponse = true;
+            } else {
+                // Regenerate prompt if the response format is incorrect
+                prompt = "Your previous response did not match the required format. Please return the selected main keyword and generated diary theme in the form (main keyword, diary topic).\n\n" +
+                        "keywords: " + keyword1 + ", " + keyword2 + ", " + keyword3 + "\n" +
+                        "age group: " + ageGroup;
+            }
+        } while (!validResponse);
+
+
+        String mainKeyword = aiResponse.substring(aiResponse.indexOf('(') + 1, aiResponse.indexOf(',')).trim();
+        String diaryTopic = aiResponse.substring(aiResponse.indexOf(',') + 1, aiResponse.indexOf(')')).trim();
+
+        AIQuestion aiQuestion1 = AIQuestion.builder()
+                .category(mainKeyword)
+                .content(diaryTopic)
+                .build();
+
+        aiQuestionRepository.save(aiQuestion1);
+
+        MemberQuestion memberQuestion = MemberQuestion.builder()
+                .member(member)
+                .aiQuestion(aiQuestion1)
+                .build();
+
+        memberQuestionRepository.save(memberQuestion);
+
+        return aiQuestion1;
     }
 }
