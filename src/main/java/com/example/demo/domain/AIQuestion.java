@@ -1,6 +1,7 @@
 package com.example.demo.domain;
 
 import com.example.demo.domain.common.BaseEntity;
+import com.example.demo.domain.mapping.MemberQuestion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +27,8 @@ public class AIQuestion extends BaseEntity {
 
     @OneToMany(mappedBy ="aiQuestion", cascade= CascadeType.ALL)
     private List<Diary> diaryList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "aiQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberQuestion> memberQuestions = new ArrayList<>();
 
 }

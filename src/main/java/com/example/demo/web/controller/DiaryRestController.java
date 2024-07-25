@@ -2,6 +2,7 @@ package com.example.demo.web.controller;
 
 import com.example.demo.apiPayload.ApiResponse;
 import com.example.demo.converter.DiaryConverter;
+import com.example.demo.domain.AIQuestion;
 import com.example.demo.domain.Diary;
 import com.example.demo.service.AIService.AICommentService;
 import com.example.demo.service.DiaryCommandService.DiaryQueryService;
@@ -26,35 +27,12 @@ public class DiaryRestController {
     private final AICommentService aiCommentService;
 
     private final DiaryQueryService diaryQueryService;
-
     private final LikeService likeService;
 
-    @PostMapping("/{memberId}/diaries")
-    @Operation(summary = "일기 작성 API", description = "특정 회원의 새로운 일기 작성")
-    public ResponseEntity<DiaryResponseDTO> createDiary(@PathVariable Long memberId, @RequestBody DiaryRequestDTO diaryRequestDTO) {
-        diaryRequestDTO.setMemberId(memberId); // Set the memberId from the path variable
-        DiaryResponseDTO diaryResponseDTO = diaryService.createDiary(diaryRequestDTO);
-        return ResponseEntity.ok(diaryResponseDTO);
-    }
+    @GetMapping("/{diaryId}/aiComment")
+    @Operation(summary="AI 댓글 조회 API", description="AI 댓글을 생성하고 조회하는 API")
+    public ApiResponse<DiaryResponseDTO.AiCommentResultDTO> aicomment(@PathVariable(name="diaryId")Long diaryId){
 
-    @GetMapping("/{diaryId}")
-    @Operation(summary = "일기 조회 API", description = "특정 일기 ID를 통해 일기 항목 조회")
-    public ResponseEntity<DiaryResponseDTO> getDiary(@PathVariable Long diaryId) {
-        DiaryResponseDTO diaryResponseDTO = diaryService.getDiary(diaryId);
-        return ResponseEntity.ok(diaryResponseDTO);
-    }
-
-    @GetMapping("/{memberId}/diaries")
-    @Operation(summary = "회원 일기 조회 API", description = "특정 회원의 모든 일기 조회")
-    public ResponseEntity<List<DiaryResponseDTO>> getDiariesByMember(@PathVariable Long memberId) {
-        List<DiaryResponseDTO> diaryResponseDTOList = diaryService.getDiariesByMember(memberId);
-        return ResponseEntity.ok(diaryResponseDTOList);
-    }
-
-
-    @GetMapping("/{diaryId}/ai")
-    @Operation(summary = "AI 댓글 조회 API", description = "AI 댓글을 생성하고 조회하는 API")
-    public ApiResponse<DiaryResponseDTO.AiCommentResultDTO> aicomment(@PathVariable(name = "diaryId") Long diaryId) {
         Diary diary = aiCommentService.generateAIComment(diaryId);
         return ApiResponse.onSuccess(DiaryConverter.aiCommentResultDTO(diary));
     }
@@ -67,7 +45,12 @@ public class DiaryRestController {
         return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
     }
 
-
+    @GetMapping("/{memberId}/aiQuestion")
+    @Operation(summary="AI 주제 생성 API", description="사용자 키워드 기반 AI 주제 생성 API")
+    public ApiResponse<DiaryResponseDTO.AIQuestionDTO> aiQuestion(@PathVariable(name="memberId")Long memberId){
+        AIQuestion aiQuestion = aiCommentService.generateAIQuestion(memberId);
+        return ApiResponse.onSuccess(DiaryConverter.aiQuestionDTO(aiQuestion));
+    }
 
     @PostMapping("/{diaryId}/comments")
     @Operation(summary = "댓글 작성 API", description = "일기에 댓글을 작성")

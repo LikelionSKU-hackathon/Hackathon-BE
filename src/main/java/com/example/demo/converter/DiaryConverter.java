@@ -1,6 +1,7 @@
 package com.example.demo.converter;
 
 import com.example.demo.domain.AIComment;
+import com.example.demo.domain.AIQuestion;
 import com.example.demo.domain.Diary;
 import com.example.demo.domain.Member;
 import com.example.demo.web.dto.DiaryResponseDTO;
@@ -48,4 +49,18 @@ public class DiaryConverter {
                 .build();
     }
 
-}
+    public static DiaryResponseDTO.AIQuestionDTO aiQuestionDTO(AIQuestion aiQuestion){
+        Long memberId = null;
+        if (aiQuestion.getMemberQuestions() != null && !aiQuestion.getMemberQuestions().isEmpty()) {
+            memberId = aiQuestion.getMemberQuestions().get(0).getMember().getId();
+        }
+
+        return DiaryResponseDTO.AIQuestionDTO.builder()
+                .category(aiQuestion.getCategory())
+                .content(aiQuestion.getContent())
+                .memberId(memberId)
+                .build();
+    }
+    }
+
+

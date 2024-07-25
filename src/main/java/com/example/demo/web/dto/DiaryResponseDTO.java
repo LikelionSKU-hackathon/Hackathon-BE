@@ -73,6 +73,17 @@ public class DiaryResponseDTO {
         List<String> keywordList;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AIQuestionDTO {
+        Long memberId;
+        String category;
+        String content;
+    }
+
+
 
 
 }

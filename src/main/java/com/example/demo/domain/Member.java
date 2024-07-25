@@ -4,6 +4,7 @@ import com.example.demo.domain.common.BaseEntity;
 import com.example.demo.domain.enums.Role;
 import com.example.demo.domain.enums.SocialType;
 import com.example.demo.domain.mapping.MemberKeyword;
+import com.example.demo.domain.mapping.MemberQuestion;
 import com.fasterxml.jackson.databind.introspect.MemberKey;
 import jakarta.persistence.*;
 import lombok.*;
@@ -54,6 +55,9 @@ public class Member extends BaseEntity  {
 
     @OneToMany(mappedBy="member", cascade=CascadeType.ALL)
     private List<Diary> diaryList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberQuestion> aiQuestionList = new ArrayList<>();
 
 }
 
