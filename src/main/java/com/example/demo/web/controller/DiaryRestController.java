@@ -52,6 +52,17 @@ public class DiaryRestController {
         return ApiResponse.onSuccess(DiaryConverter.aiQuestionDTO(aiQuestion));
     }
 
+
+    @GetMapping("/month/{year}/{month}/{memberId}")
+    @Operation(summary="이번 달 나의 쓰임 API(이모지 조회)", description=" 이번 달 사용자 일기의 기분을 모아보는 API")
+    public ApiResponse<DiaryResponseDTO.EmojiResultDTO> emoji(@PathVariable(name = "year") int year,
+                                                              @PathVariable(name = "month") int month,
+                                                              @PathVariable(name = "memberId") Long memberId) {
+
+        DiaryResponseDTO.EmojiResultDTO result = diaryQueryService.getDiariesByMonth(year, month, memberId);
+        return ApiResponse.onSuccess(result);
+    }
+
     @PostMapping("/{diaryId}/comments")
     @Operation(summary = "댓글 작성 API", description = "일기에 댓글을 작성")
     public ResponseEntity<CommentResponseDTO> createComment(@PathVariable Long diaryId, @RequestBody CommentRequestDTO commentRequestDTO) {
@@ -92,5 +103,6 @@ public class DiaryRestController {
         DiaryResponseDTO diaryResponseDTO = diaryService.getMostLikedDiaryToday();
         return ResponseEntity.ok(diaryResponseDTO);
     }
+
 
 }
