@@ -1,13 +1,14 @@
 package com.example.demo.web.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class DiaryRequestDTO {
-    private String title;
-    private String content;
-    private boolean isPublic;
+@Builder
+public class LikeResponseDTO {
+    private Long id;
+    private Long diaryId;
     private Long memberId;
 }
