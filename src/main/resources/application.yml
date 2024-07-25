@@ -68,3 +68,4 @@ openai:
   api:
     url: https://api.openai.com/v1/chat/completions
     key: ${AWS_OPENAI_KEY}
+
