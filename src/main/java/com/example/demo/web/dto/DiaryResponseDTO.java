@@ -1,15 +1,34 @@
 package com.example.demo.web.dto;
 
+
 import com.example.demo.domain.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import com.example.demo.domain.AIComment;
+import com.example.demo.domain.Diary;
+import com.example.demo.domain.Mood;
+import lombok.*;
+
+
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DiaryResponseDTO {
+    private Long id;
+    private String title;
+    private String content;
+    private boolean isPublic;
+    private String memberUsername;
+    private int likeCount; // 좋아요 갯수 필드 추가
+
     @Builder
     @Getter
     @NoArgsConstructor

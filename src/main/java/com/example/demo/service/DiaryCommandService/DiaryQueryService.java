@@ -1,4 +1,4 @@
-package com.example.demo.service.DiaryService;
+package com.example.demo.service.DiaryCommandService;
 
 import com.example.demo.domain.Diary;
 

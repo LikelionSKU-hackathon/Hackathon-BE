@@ -10,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -47,6 +48,7 @@ public class Diary extends BaseEntity {
     @OneToMany(mappedBy ="diary", cascade= CascadeType.ALL)
     private List<AIComment> AICommentList = new ArrayList<>();
 
+    private int likeCount; // 좋아요 갯수 필드 추가
 
 
 
