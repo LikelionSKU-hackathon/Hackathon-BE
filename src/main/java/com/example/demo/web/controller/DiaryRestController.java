@@ -24,18 +24,10 @@ public class DiaryRestController {
 
     private final DiaryService diaryService;
     private final CommentService commentService;
-    private final AICommentService aiCommentService;
 
     private final DiaryQueryService diaryQueryService;
     private final LikeService likeService;
 
-    @GetMapping("/{diaryId}/aiComment")
-    @Operation(summary="AI 댓글 조회 API", description="AI 댓글을 생성하고 조회하는 API")
-    public ApiResponse<DiaryResponseDTO.AiCommentResultDTO> aicomment(@PathVariable(name="diaryId")Long diaryId){
-
-        Diary diary = aiCommentService.generateAIComment(diaryId);
-        return ApiResponse.onSuccess(DiaryConverter.aiCommentResultDTO(diary));
-    }
 
 
     @GetMapping("/diaryList")
@@ -43,13 +35,6 @@ public class DiaryRestController {
     public ApiResponse<DiaryResponseDTO.PlusDiaryResultDTO> diaryList(){
         List<Diary> diaries = diaryQueryService.getDiaryList();
         return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
-    }
-
-    @GetMapping("/{memberId}/aiQuestion")
-    @Operation(summary="AI 주제 생성 API", description="사용자 키워드 기반 AI 주제 생성 API")
-    public ApiResponse<DiaryResponseDTO.AIQuestionDTO> aiQuestion(@PathVariable(name="memberId")Long memberId){
-        AIQuestion aiQuestion = aiCommentService.generateAIQuestion(memberId);
-        return ApiResponse.onSuccess(DiaryConverter.aiQuestionDTO(aiQuestion));
     }
 
 
