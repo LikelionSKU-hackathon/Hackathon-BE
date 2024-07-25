@@ -7,11 +7,12 @@ import com.example.demo.domain.Member;
 import com.example.demo.web.dto.DiaryResponseDTO;
 import com.example.demo.web.dto.MemberResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class DiaryConverter {
     public static DiaryResponseDTO.AiCommentResultDTO aiCommentResultDTO(Diary diary){
         return DiaryResponseDTO.AiCommentResultDTO.builder()
@@ -61,6 +62,16 @@ public class DiaryConverter {
                 .memberId(memberId)
                 .build();
     }
+
+    public DiaryResponseDTO.EmojiDTO convertToEmojiDto(Diary diary) {
+        return DiaryResponseDTO.EmojiDTO.builder()
+                .DiaryId(diary.getId())
+                .MoodImage(diary.getMood().getMoodImage())
+                .day(diary.getCreatedAt())
+                .build();
     }
+
+
+}
 
 

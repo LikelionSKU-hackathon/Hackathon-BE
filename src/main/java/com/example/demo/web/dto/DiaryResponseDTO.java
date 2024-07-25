@@ -64,6 +64,26 @@ public class DiaryResponseDTO {
         String content;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EmojiDTO {
+        Long DiaryId;
+        String MoodImage;
+        LocalDateTime day;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EmojiResultDTO{
+        List<EmojiDTO> emojiDTOList;
+    }
+
+
+
 
 
 

@@ -40,5 +40,16 @@ public class DiaryRestController {
         return ApiResponse.onSuccess(DiaryConverter.aiQuestionDTO(aiQuestion));
     }
 
+    @GetMapping("/month/{year}/{month}/{memberId}")
+    @Operation(summary="이번 달 나의 쓰임 API(이모지 조회)", description=" 이번 달 사용자 일기의 기분을 모아보는 API")
+    public ApiResponse<DiaryResponseDTO.EmojiResultDTO> emoji(@PathVariable(name = "year") int year,
+                                                              @PathVariable(name = "month") int month,
+                                                              @PathVariable(name = "memberId") Long memberId) {
+
+        DiaryResponseDTO.EmojiResultDTO result = diaryQueryService.getDiariesByMonth(year, month, memberId);
+        return ApiResponse.onSuccess(result);
+    }
+
+
 
 }
