@@ -29,20 +29,19 @@ public class JwtProvider {
     private final long refreshTokenExpirationTime = 7 * 24 * 60 * 60 * 1000; // 7 days
 
     public JwtToken generateToken(CustomOAuth2User customOAuth2User) {
-        String username = customOAuth2User.getName();
-        String email = customOAuth2User.getStringAttributes().get("email");
+        Long memberId = customOAuth2User.getId();
 
         String accessToken = Jwts.builder()
-                .setSubject(email)
-                .claim("email", email)
+                .setSubject(memberId.toString())
+                .claim("memberId", memberId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
                 .signWith(secretKey)
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setSubject(email)
-                .claim("email", email)
+                .setSubject(memberId.toString())
+                .claim("memberId", memberId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
                 .signWith(secretKey)
@@ -50,21 +49,21 @@ public class JwtProvider {
 
         return new JwtToken(accessToken, refreshToken);
     }
+
     public JwtToken generateToken(Member member) {
-        String username = member.getUsername();
-        String email = member.getEmail();
+        Long memberId = member.getId();
 
         String accessToken = Jwts.builder()
-                .setSubject(email)
-                .claim("email", email)
+                .setSubject(memberId.toString())
+                .claim("memberId", memberId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
                 .signWith(secretKey)
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setSubject(email)
-                .claim("email", email)
+                .setSubject(memberId.toString())
+                .claim("memberId", memberId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
                 .signWith(secretKey)
@@ -72,7 +71,6 @@ public class JwtProvider {
 
         return new JwtToken(accessToken, refreshToken);
     }
-
 
     public String validate(String jwt) {
         try {
@@ -90,8 +88,9 @@ public class JwtProvider {
     public Key getSecretKey() {
         return secretKey;
     }
-    public String getEmailFromToken(String token) {
+
+    public Long getMemberIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
-        return claims.getSubject();
+        return claims.get("memberId", Long.class);
     }
 }

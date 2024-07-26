@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,13 +56,13 @@ public class MemberRestController {
         return ApiResponse.onSuccess(MemberConverter.toJoinResultDTO(member));
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping("/")
     @Operation(summary="마이페이지 API", description="회원정보 조회 API")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공")
-
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<MemberResponseDTO.MyPageDTO> mypage (@PathVariable(name="memberId") Long memberId) {
+    public ApiResponse<MemberResponseDTO.MyPageDTO> mypage(Authentication authentication) {
+        Long memberId = (Long) authentication.getPrincipal();
         Member member = memberQueryService.getMypage(memberId);
         return ApiResponse.onSuccess(MemberConverter.toMypageDTO(member));
     }
