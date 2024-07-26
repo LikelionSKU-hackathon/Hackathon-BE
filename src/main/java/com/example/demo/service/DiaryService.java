@@ -1,18 +1,18 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.AIComment;
 import com.example.demo.domain.Diary;
-import com.example.demo.domain.LikeHistory;
 import com.example.demo.domain.Member;
+import com.example.demo.domain.Mood;
 import com.example.demo.web.dto.DiaryRequestDTO;
 import com.example.demo.web.dto.DiaryResponseDTO;
 import com.example.demo.repository.DiaryRepository;
-import com.example.demo.repository.LikeHistoryRepository;
 import com.example.demo.repository.MemberRepository;
+import com.example.demo.repository.MoodRepository;
+import com.example.demo.service.AIService.AICommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +23,8 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
-    private final LikeHistoryRepository likeHistoryRepository;
+    private final MoodRepository moodRepository;
+    private final AICommentService aiCommentService; // AICommentService 주입
 
     public DiaryResponseDTO createDiary(DiaryRequestDTO diaryRequestDTO) {
         Optional<Member> memberOptional = memberRepository.findById(diaryRequestDTO.getMemberId());
@@ -31,16 +32,27 @@ public class DiaryService {
             throw new RuntimeException("Member not found");
         }
 
+        Optional<Mood> moodOptional = moodRepository.findById(diaryRequestDTO.getMoodId());
+        if (!moodOptional.isPresent()) {
+            throw new RuntimeException("Mood not found");
+        }
+
         Member member = memberOptional.get();
+        Mood mood = moodOptional.get();
+
         Diary diary = Diary.builder()
                 .title(diaryRequestDTO.getTitle())
                 .content(diaryRequestDTO.getContent())
                 .isPublic(diaryRequestDTO.isPublic())
                 .member(member)
-                .likeCount(0) // 좋아요 갯수 초기화
+                .mood(mood)
+                .likeCount(0)
                 .build();
 
         Diary savedDiary = diaryRepository.save(diary);
+
+        // AI 댓글 생성
+        Diary diaryWithAIComment = aiCommentService.generateAIComment(savedDiary.getId());
 
         return DiaryResponseDTO.builder()
                 .id(savedDiary.getId())
@@ -48,7 +60,11 @@ public class DiaryService {
                 .content(savedDiary.getContent())
                 .isPublic(savedDiary.isPublic())
                 .memberUsername(member.getUsername())
-                .likeCount(savedDiary.getLikeCount()) // 좋아요 갯수 포함
+                .likeCount(savedDiary.getLikeCount())
+                .moodName(mood.getName())
+                .moodImage(mood.getMoodImage())
+                .createdAt(savedDiary.getCreatedAt())
+                .aiComments(diaryWithAIComment.getAICommentList() != null ? diaryWithAIComment.getAICommentList().stream().map(AIComment::getContent).collect(Collectors.toList()) : null) // AI 댓글 포함 및 null 체크
                 .build();
     }
 
@@ -59,13 +75,22 @@ public class DiaryService {
         }
 
         Diary diary = diaryOptional.get();
+        Mood mood = diary.getMood();
+
+        // AI 댓글 생성
+        Diary diaryWithAIComment = aiCommentService.generateAIComment(diary.getId());
+
         return DiaryResponseDTO.builder()
                 .id(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
                 .isPublic(diary.isPublic())
                 .memberUsername(diary.getMember().getUsername())
-                .likeCount(diary.getLikeCount()) // 좋아요 갯수 포함
+                .likeCount(diary.getLikeCount())
+                .moodName(mood != null ? mood.getName() : null)
+                .moodImage(mood != null ? mood.getMoodImage() : null)
+                .createdAt(diary.getCreatedAt())
+                .aiComments(diaryWithAIComment.getAICommentList() != null ? diaryWithAIComment.getAICommentList().stream().map(AIComment::getContent).collect(Collectors.toList()) : null) // AI 댓글 포함 및 null 체크
                 .build();
     }
 
@@ -77,14 +102,25 @@ public class DiaryService {
 
         List<Diary> diaries = diaryRepository.findByMemberId(memberId);
         return diaries.stream()
-                .map(diary -> DiaryResponseDTO.builder()
-                        .id(diary.getId())
-                        .title(diary.getTitle())
-                        .content(diary.getContent())
-                        .isPublic(diary.isPublic())
-                        .memberUsername(diary.getMember().getUsername())
-                        .likeCount(diary.getLikeCount()) // 좋아요 갯수 포함
-                        .build())
+                .map(diary -> {
+                    Mood mood = diary.getMood();
+
+                    // AI 댓글 생성
+                    Diary diaryWithAIComment = aiCommentService.generateAIComment(diary.getId());
+
+                    return DiaryResponseDTO.builder()
+                            .id(diary.getId())
+                            .title(diary.getTitle())
+                            .content(diary.getContent())
+                            .isPublic(diary.isPublic())
+                            .memberUsername(diary.getMember().getUsername())
+                            .likeCount(diary.getLikeCount())
+                            .moodName(mood != null ? mood.getName() : null)
+                            .moodImage(mood != null ? mood.getMoodImage() : null)
+                            .createdAt(diary.getCreatedAt())
+                            .aiComments(diaryWithAIComment.getAICommentList() != null ? diaryWithAIComment.getAICommentList().stream().map(AIComment::getContent).collect(Collectors.toList()) : null) // AI 댓글 포함 및 null 체크
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -95,55 +131,22 @@ public class DiaryService {
         }
 
         Diary diary = diaryOptional.get();
+        Mood mood = diary.getMood();
+
+        // AI 댓글 생성
+        Diary diaryWithAIComment = aiCommentService.generateAIComment(diary.getId());
+
         return DiaryResponseDTO.builder()
                 .id(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
                 .isPublic(diary.isPublic())
                 .memberUsername(diary.getMember().getUsername())
-                .likeCount(diary.getLikeCount()) // 좋아요 갯수 포함
+                .likeCount(diary.getLikeCount())
+                .moodName(mood != null ? mood.getName() : null)
+                .moodImage(mood != null ? mood.getMoodImage() : null)
+                .createdAt(diary.getCreatedAt())
+                .aiComments(diaryWithAIComment.getAICommentList() != null ? diaryWithAIComment.getAICommentList().stream().map(AIComment::getContent).collect(Collectors.toList()) : null) // AI 댓글 포함 및 null 체크
                 .build();
-    }
-
-    public DiaryResponseDTO getMostLikedDiaryToday() {
-        LocalDate today = LocalDate.now();
-        List<LikeHistory> todayLikeHistories = likeHistoryRepository.findByDate(today);
-
-        if (todayLikeHistories.isEmpty()) {
-            throw new RuntimeException("No diaries found for today");
-        }
-
-        LikeHistory mostLiked = todayLikeHistories.stream()
-                .max((h1, h2) -> Integer.compare(h1.getLikeCount(), h2.getLikeCount()))
-                .orElseThrow(() -> new RuntimeException("No diaries found for today"));
-
-        Diary diary = mostLiked.getDiary();
-        return DiaryResponseDTO.builder()
-                .id(diary.getId())
-                .title(diary.getTitle())
-                .content(diary.getContent())
-                .isPublic(diary.isPublic())
-                .memberUsername(diary.getMember().getUsername())
-                .likeCount(diary.getLikeCount()) // 좋아요 갯수 포함
-                .build();
-    }
-
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void resetLikeCounts() {
-        List<Diary> diaries = diaryRepository.findAll();
-        LocalDate today = LocalDate.now();
-
-        for (Diary diary : diaries) {
-            LikeHistory likeHistory = LikeHistory.builder()
-                    .diary(diary)
-                    .likeCount(diary.getLikeCount())
-                    .date(today)
-                    .build();
-
-            likeHistoryRepository.save(likeHistory);
-
-            diary.setLikeCount(0);
-            diaryRepository.save(diary);
-        }
     }
 }

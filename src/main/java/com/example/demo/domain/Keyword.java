@@ -15,10 +15,10 @@ public class Keyword extends BaseEntity {
     private Long id;
 
     @Column(nullable = false, length = 100)
-    private String name;
+    private String name; // ex : 퇴직 후의 삶이 걱정돼요.
 
     @Column(nullable = false, length= 100 )
-    private String category;
+    private String category; // ex : 건강 문제
 
     @Column(nullable=false, length =50)
     private String ageGroup;
