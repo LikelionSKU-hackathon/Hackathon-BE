@@ -15,9 +15,14 @@ import java.util.Map;
 @Getter
 public class CustomOAuth2User implements OAuth2User {
     private OAuth2User oauth2User;
-
-    @Getter
     private Map<String, String> stringAttributes;
+    private Long id; // 추가된 필드
+
+    public CustomOAuth2User(OAuth2User oauth2User, Map<String, String> stringAttributes) {
+        this.oauth2User = oauth2User;
+        this.stringAttributes = stringAttributes;
+        this.id = Long.valueOf(stringAttributes.get("id"));
+    }
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -30,9 +35,14 @@ public class CustomOAuth2User implements OAuth2User {
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return stringAttributes != null && stringAttributes.containsKey("name")
                 ? stringAttributes.get("name")
                 : oauth2User != null ? oauth2User.getName() : null;
     }
+
+    public Long getId() {
+        return id;
+    }
 }
+

@@ -78,6 +78,37 @@ public class DiaryResponseDTO {
         List<String> keywordList;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AIQuestionDTO {
+        Long memberId;
+        String category;
+        String content;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EmojiDTO {
+        Long DiaryId;
+        String MoodImage;
+        LocalDateTime day;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EmojiResultDTO{
+        List<EmojiDTO> emojiDTOList;
+    }
+
+
+
+
 
 
 }

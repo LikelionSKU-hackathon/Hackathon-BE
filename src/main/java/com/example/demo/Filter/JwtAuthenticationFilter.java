@@ -40,28 +40,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = parseToken(request);
             log.info("Parsed token: {}", token);
             if (token != null) {
-                String email = jwtProvider.getEmailFromToken(token);
-                log.info("Email from token: {}", email);
+                Long memberId = jwtProvider.getMemberIdFromToken(token);
+                log.info("Member ID from token: {}", memberId);
 
-                if (email != null) {
-                    Member member = memberRepository.findByEmail(email).orElse(null);
+                if (memberId != null) {
+                    Member member = memberRepository.findById(memberId).orElse(null);
 
                     if (member != null) {
                         String role = member.getRole().getKey();
                         List<GrantedAuthority> authorities = new ArrayList<>();
                         authorities.add(new SimpleGrantedAuthority(role));
-                        log.info("사용자 권한 설정 - 이메일: {}, 권한: {}", email, role);
-                        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
+                        log.info("사용자 권한 설정 - memberId: {}, 권한: {}", memberId, role);
+                        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                                memberId, null, authorities);
                         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                         securityContext.setAuthentication(authenticationToken);
                         SecurityContextHolder.setContext(securityContext);
                     } else {
-                        log.info("No member found for email: {}", email);
+                        log.info("No member found for memberId: {}", memberId);
                     }
                 } else {
-                    log.info("Invalid token: email is null");
+                    log.info("Invalid token: memberId is null");
                 }
             } else {
                 log.info("No token found in request");
