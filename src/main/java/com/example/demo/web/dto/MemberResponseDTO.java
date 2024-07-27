@@ -56,7 +56,7 @@ public class MemberResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class KeywordResultDTO{
-        String age_group;
+        Long memberId;
         List<Keyword> KeywordList;
 
     }
