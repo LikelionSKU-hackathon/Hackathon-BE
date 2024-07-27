@@ -24,7 +24,7 @@ public class DiaryRestController {
 
     private final DiaryService diaryService;
     private final CommentService commentService;
-
+    private final AICommentService aiCommentService;
     private final DiaryQueryService diaryQueryService;
     private final LikeService likeService;
 
@@ -80,12 +80,6 @@ public class DiaryRestController {
     @Operation(summary = "역대 좋아요 수가 가장 많은 일기 조회 API", description = "역대 좋아요 갯수가 가장 많은 일기 조회")
     public ResponseEntity<DiaryResponseDTO> getMostLikedDiary() {
         DiaryResponseDTO diaryResponseDTO = diaryService.getMostLikedDiary();
-        return ResponseEntity.ok(diaryResponseDTO);
-    }
-    @GetMapping("/popular/today")
-    @Operation(summary = "오늘의 인기 일기 조회 API", description = "오늘 좋아요 갯수가 가장 많은 일기를 조회")
-    public ResponseEntity<DiaryResponseDTO> getMostLikedDiaryToday() {
-        DiaryResponseDTO diaryResponseDTO = diaryService.getMostLikedDiaryToday();
         return ResponseEntity.ok(diaryResponseDTO);
     }
 

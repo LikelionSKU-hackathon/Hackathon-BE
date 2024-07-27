@@ -27,7 +27,11 @@ public class DiaryResponseDTO {
     private String content;
     private boolean isPublic;
     private String memberUsername;
-    private int likeCount; // 좋아요 갯수 필드 추가
+    private int likeCount;
+    private String moodName;
+    private String moodImage;
+    LocalDateTime createdAt;
+    private List<String> aiComments;
 
     @Builder
     @Getter
@@ -39,6 +43,7 @@ public class DiaryResponseDTO {
         String title;
         String content;
         List<String> aiCommentList;
+
 
     }
     @Builder
