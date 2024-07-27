@@ -10,4 +10,5 @@ public class DiaryRequestDTO {
     private String content;
     private boolean isPublic;
     private Long memberId;
+    private Long moodId;
 }
