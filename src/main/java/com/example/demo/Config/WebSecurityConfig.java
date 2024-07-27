@@ -42,7 +42,7 @@ public class WebSecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/api/v1/oauth2/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/members/**", "/health", "/diary/**")
+                        .requestMatchers("/", "/api/v1/oauth2/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/members/**", "/health", "/diary/**","/keyword/**","/ai/**")
                         .permitAll()
                         .requestMatchers("/api/v1/user/secure-endpoint")
                         .hasRole("USER")

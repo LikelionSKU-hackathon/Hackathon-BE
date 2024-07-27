@@ -30,7 +30,7 @@ public class MemberRestController {
     private final MemberQueryService memberQueryService;
 
     // 유효성 검사 적용 전 회원가입 API
-    @PostMapping(value="/",consumes = "multipart/form-data")
+    @PostMapping(value="/signup",consumes = "multipart/form-data")
 
     @Operation(summary="회원가입 API", description="회원가입하는 API")
     @ApiResponses({
@@ -44,14 +44,15 @@ public class MemberRestController {
         return ApiResponse.onSuccess(MemberConverter.toJoinResultDTO(member));
     }
 
-    @PutMapping(value="/{memberId}",consumes = "multipart/form-data")
+    @PutMapping(value="/social/signup",consumes = "multipart/form-data")
 
     @Operation(summary="소셜 회원가입 API", description="추가적인 소셜 회원가입하는 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",description = "NotFound, 찾을 수 없음")
     })
-    public ApiResponse<MemberResponseDTO.JoinResultDTO> join (@ModelAttribute @Valid MemberRequestDTO.SocialJoinDTO request, @PathVariable (name="memberId") Long memberId) {
+    public ApiResponse<MemberResponseDTO.JoinResultDTO> join (@ModelAttribute @Valid MemberRequestDTO.SocialJoinDTO request,Authentication authentication) {
+        Long memberId = (Long) authentication.getPrincipal();
         Member member = memberCommandService.SocialJoinMember(request, memberId);
         return ApiResponse.onSuccess(MemberConverter.toJoinResultDTO(member));
     }
