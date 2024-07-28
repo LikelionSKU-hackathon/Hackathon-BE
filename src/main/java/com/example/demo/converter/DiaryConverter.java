@@ -18,9 +18,7 @@ public class DiaryConverter {
         return DiaryResponseDTO.AiCommentResultDTO.builder()
                 .moodId(diary.getMood().getId())
                 .moodName(diary.getMood().getName())
-                .aiCommentList(diary.getAICommentList().stream()
-                        .map(AIComment::getContent)
-                        .collect(Collectors.toList()))
+                .aiCommentList(diary.getAiComment() != null ? List.of(diary.getAiComment().getContent()) : null) // 단일 AIComment 처리
                 .title(diary.getTitle())
                 .content(diary.getContent())
                 .build();

@@ -28,7 +28,32 @@ public class DiaryRestController {
     private final DiaryQueryService diaryQueryService;
     private final LikeService likeService;
 
+    @PostMapping("/{memberId}/diaries")
+    @Operation(summary = "일기 작성 API", description = "특정 회원의 새로운 일기 작성")
+    public ResponseEntity<DiaryResponseDTO> createDiary(@PathVariable Long memberId, @RequestBody DiaryRequestDTO diaryRequestDTO) {
+        diaryRequestDTO.setMemberId(memberId); // Set the memberId from the path variable
+        DiaryResponseDTO diaryResponseDTO = diaryService.createDiary(diaryRequestDTO);
+        return ResponseEntity.ok(diaryResponseDTO);
+    }
+    @GetMapping("/{diaryId}")
+    @Operation(summary = "일기 조회 API", description = "특정 일기 ID를 통해 일기 항목 조회")
+    public ResponseEntity<DiaryResponseDTO> getDiary(@PathVariable Long diaryId) {
+        DiaryResponseDTO diaryResponseDTO = diaryService.getDiary(diaryId);
+        return ResponseEntity.ok(diaryResponseDTO);
+    }
 
+    @GetMapping("/{memberId}/diaries")
+    @Operation(summary = "회원 일기 조회 API", description = "특정 회원의 모든 일기 조회")
+    public ResponseEntity<List<DiaryResponseDTO>> getDiariesByMember(@PathVariable Long memberId) {
+        List<DiaryResponseDTO> diaryResponseDTOList = diaryService.getDiariesByMember(memberId);
+        return ResponseEntity.ok(diaryResponseDTOList);
+    }
+    @GetMapping("/{diaryId}/ai")
+    @Operation(summary = "AI 댓글 조회 API", description = "AI 댓글을 생성하고 조회하는 API")
+    public ApiResponse<DiaryResponseDTO.AiCommentResultDTO> aicomment(@PathVariable(name = "diaryId") Long diaryId) {
+        Diary diary = aiCommentService.generateAIComment(diaryId);
+        return ApiResponse.onSuccess(DiaryConverter.aiCommentResultDTO(diary));
+    }
 
     @GetMapping("/diaryList")
     @Operation(summary="더 많은 이야기 구경하기 API", description=" 다른 사용자들이 작성한 글을 조회하는 API")
@@ -36,7 +61,6 @@ public class DiaryRestController {
         List<Diary> diaries = diaryQueryService.getDiaryList();
         return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
     }
-
 
     @GetMapping("/month/{year}/{month}/{memberId}")
     @Operation(summary="이번 달 나의 쓰임 API(이모지 조회)", description=" 이번 달 사용자 일기의 기분을 모아보는 API")

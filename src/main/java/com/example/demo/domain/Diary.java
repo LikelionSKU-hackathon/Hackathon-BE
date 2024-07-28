@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 
 import com.example.demo.domain.common.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,11 +11,11 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Diary extends BaseEntity {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -27,31 +26,26 @@ public class Diary extends BaseEntity {
 
     private boolean isPublic;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="member_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="mood_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mood_id")
     private Mood mood;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="question_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
     private AIQuestion aiQuestion;
 
-    @OneToMany(mappedBy ="diary", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<Likes> likesList = new ArrayList<>();
 
-    @OneToMany(mappedBy ="diary", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy ="diary", cascade= CascadeType.ALL)
-    private List<AIComment> AICommentList = new ArrayList<>();
+    @OneToOne(mappedBy = "diary", cascade = CascadeType.ALL)
+    private AIComment aiComment;  // 단일 AIComment
 
     private int likeCount; // 좋아요 갯수 필드 추가
-
-
-
-
-
 }

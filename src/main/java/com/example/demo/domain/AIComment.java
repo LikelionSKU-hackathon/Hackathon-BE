@@ -17,7 +17,7 @@ public class AIComment extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="diary_id")
     private Diary diary;
 

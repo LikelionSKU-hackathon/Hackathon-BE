@@ -52,7 +52,7 @@ public class DiaryService {
         Diary savedDiary = diaryRepository.save(diary);
 
         // AI 댓글 생성
-        Diary diaryWithAIComment = aiCommentService.generateAIComment(savedDiary.getId());
+        aiCommentService.generateAIComment(savedDiary.getId());
 
         return DiaryResponseDTO.builder()
                 .id(savedDiary.getId())
@@ -64,7 +64,7 @@ public class DiaryService {
                 .moodName(mood.getName())
                 .moodImage(mood.getMoodImage())
                 .createdAt(savedDiary.getCreatedAt())
-                .aiComments(diaryWithAIComment.getAICommentList() != null ? diaryWithAIComment.getAICommentList().stream().map(AIComment::getContent).collect(Collectors.toList()) : null) // AI 댓글 포함 및 null 체크
+                .aiComments(savedDiary.getAiComment() != null ? List.of(savedDiary.getAiComment().getContent()) : null)  // AI 댓글 포함
                 .build();
     }
 
@@ -76,9 +76,7 @@ public class DiaryService {
 
         Diary diary = diaryOptional.get();
         Mood mood = diary.getMood();
-
-        // AI 댓글 생성
-        Diary diaryWithAIComment = aiCommentService.generateAIComment(diary.getId());
+        AIComment aiComment = diary.getAiComment();
 
         return DiaryResponseDTO.builder()
                 .id(diary.getId())
@@ -90,7 +88,7 @@ public class DiaryService {
                 .moodName(mood != null ? mood.getName() : null)
                 .moodImage(mood != null ? mood.getMoodImage() : null)
                 .createdAt(diary.getCreatedAt())
-                .aiComments(diaryWithAIComment.getAICommentList() != null ? diaryWithAIComment.getAICommentList().stream().map(AIComment::getContent).collect(Collectors.toList()) : null) // AI 댓글 포함 및 null 체크
+                .aiComments(aiComment != null ? List.of(aiComment.getContent()) : null)  // AI 댓글 포함
                 .build();
     }
 
@@ -104,9 +102,7 @@ public class DiaryService {
         return diaries.stream()
                 .map(diary -> {
                     Mood mood = diary.getMood();
-
-                    // AI 댓글 생성
-                    Diary diaryWithAIComment = aiCommentService.generateAIComment(diary.getId());
+                    AIComment aiComment = diary.getAiComment();
 
                     return DiaryResponseDTO.builder()
                             .id(diary.getId())
@@ -118,7 +114,7 @@ public class DiaryService {
                             .moodName(mood != null ? mood.getName() : null)
                             .moodImage(mood != null ? mood.getMoodImage() : null)
                             .createdAt(diary.getCreatedAt())
-                            .aiComments(diaryWithAIComment.getAICommentList() != null ? diaryWithAIComment.getAICommentList().stream().map(AIComment::getContent).collect(Collectors.toList()) : null) // AI 댓글 포함 및 null 체크
+                            .aiComments(aiComment != null ? List.of(aiComment.getContent()) : null)  // AI 댓글 포함
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -132,9 +128,7 @@ public class DiaryService {
 
         Diary diary = diaryOptional.get();
         Mood mood = diary.getMood();
-
-        // AI 댓글 생성
-        Diary diaryWithAIComment = aiCommentService.generateAIComment(diary.getId());
+        AIComment aiComment = diary.getAiComment();
 
         return DiaryResponseDTO.builder()
                 .id(diary.getId())
@@ -146,7 +140,7 @@ public class DiaryService {
                 .moodName(mood != null ? mood.getName() : null)
                 .moodImage(mood != null ? mood.getMoodImage() : null)
                 .createdAt(diary.getCreatedAt())
-                .aiComments(diaryWithAIComment.getAICommentList() != null ? diaryWithAIComment.getAICommentList().stream().map(AIComment::getContent).collect(Collectors.toList()) : null) // AI 댓글 포함 및 null 체크
+                .aiComments(aiComment != null ? List.of(aiComment.getContent()) : null)  // AI 댓글 포함
                 .build();
     }
 }
