@@ -1,5 +1,8 @@
 package com.example.demo.web.dto;
 
+import com.example.demo.domain.enums.Role;
+import com.example.demo.validation.annotation.CheckEnum;
+import com.example.demo.validation.annotation.ExistKeywords;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +28,9 @@ public class MemberRequestDTO {
 
         @NotNull
         String age_group;
+
         @NotNull
+        @CheckEnum(enumClass = Role.class, message = "유효하지 않은 역할입니다.")
         String role;
 
         private  MultipartFile profileImage;
@@ -56,6 +61,7 @@ public class MemberRequestDTO {
     @Getter
     @Setter
     public static class setKeywordDTO{
+        @ExistKeywords
         List<Long> keywordIdList;
     }
 
