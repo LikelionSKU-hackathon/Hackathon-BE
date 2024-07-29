@@ -1,5 +1,6 @@
 package com.example.demo.web.dto;
 
+import com.example.demo.validation.annotation.ExistKeywords;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,6 +57,7 @@ public class MemberRequestDTO {
     @Getter
     @Setter
     public static class setKeywordDTO{
+        @ExistKeywords
         List<Long> keywordIdList;
     }
 

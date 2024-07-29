@@ -68,12 +68,9 @@ public class MemberCommandServiceImpl implements MemberCommandService{
     @Override
     public Member setKeyword(MemberRequestDTO.setKeywordDTO request, Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow();
+                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         List<Keyword> keywords = keywordRepository.findAllById(request.getKeywordIdList());
-        if (keywords.size() != request.getKeywordIdList().size()) {
-            throw new KeywordHandler(ErrorStatus.INVALID_KEYWORD_IDS);
-        }
 
         List<MemberKeyword> memberKeywords = keywords.stream()
                 .map(keyword -> MemberKeyword.builder()

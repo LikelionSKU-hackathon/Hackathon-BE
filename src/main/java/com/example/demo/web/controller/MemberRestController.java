@@ -31,7 +31,6 @@ public class MemberRestController {
 
     // 유효성 검사 적용 전 회원가입 API
     @PostMapping(value="/signup",consumes = "multipart/form-data")
-
     @Operation(summary="회원가입 API", description="회원가입하는 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
