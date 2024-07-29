@@ -29,8 +29,8 @@ public class MemberQueryServiceImpl implements MemberQueryService{
     @Override
     public List<Keyword> getKeyword(Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
-        List<Keyword> keywords = keywordRepository.findByAgeGroup(member.getAgeGroup());
-        if (keywords.isEmpty()) {
+        List<Keyword> keywords = keywordRepository.findByAgeGroup(member.getAgeGroup()); //  AgeGroup으로 데이터 조회
+        if (keywords.isEmpty()) { // keyword 찾을 수 없으면 에러 발생
             throw new MemberHandler(ErrorStatus.KEYWORD_NOT_FOUND);
         }
         return keywords;
@@ -40,14 +40,14 @@ public class MemberQueryServiceImpl implements MemberQueryService{
     @Override
     public Boolean checkEmail(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
-        return member.isPresent();
+        return member.isPresent(); // 존재하면 true , 존재하지 않으면 false
     }
 
     //닉네임 중복확인
     @Override
     public Boolean checkUsername(String username){
         Optional<Member> member = memberRepository.findByUsername(username);
-        return member.isPresent();
+        return member.isPresent(); // 존재하면 true , 존재하지 않으면 false
     }
 
 

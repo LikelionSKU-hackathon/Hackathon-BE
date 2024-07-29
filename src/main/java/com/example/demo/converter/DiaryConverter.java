@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 @Component
 public class DiaryConverter {
+    //  AIComment 결과값 반환(moodId, moodName, aiCommentList(ai comment 1개만 받도록), diaryTitle, diaryContent)
     public static DiaryResponseDTO.AiCommentResultDTO aiCommentResultDTO(Diary diary){
         return DiaryResponseDTO.AiCommentResultDTO.builder()
                 .moodId(diary.getMood().getId())
@@ -23,7 +24,7 @@ public class DiaryConverter {
                 .content(diary.getContent())
                 .build();
     }
-
+    // 더 많은 이야기 구경하기( diaryList에  diaryId, title, content, mood, member(id,name,profile, keywordList) 등 일부 내용만 받도록 설정)
     public static DiaryResponseDTO.PlusDiaryResultDTO diaryListDTO(List<Diary> diaries) {
         List<DiaryResponseDTO.DiaryDTO> diaryDTOList = diaries.stream()
                 .map(diary -> DiaryResponseDTO.DiaryDTO.builder()
@@ -47,7 +48,7 @@ public class DiaryConverter {
                 .diaryList(diaryDTOList)
                 .build();
     }
-
+    //aiQuestion 결과값 반환(aiQuestion의 카테고리와, 질문 내용, 해당 멤버의 값 반환)
     public static DiaryResponseDTO.AIQuestionDTO aiQuestionDTO(AIQuestion aiQuestion){
         Long memberId = null;
         if (aiQuestion.getMemberQuestions() != null && !aiQuestion.getMemberQuestions().isEmpty()) {
@@ -60,7 +61,7 @@ public class DiaryConverter {
                 .memberId(memberId)
                 .build();
     }
-
+    //이모지 조회(diaryId( 다이어리 조회를 위함), moodImage(이미지 조회), day(날짜를 기준으로))
     public DiaryResponseDTO.EmojiDTO convertToEmojiDto(Diary diary) {
         return DiaryResponseDTO.EmojiDTO.builder()
                 .DiaryId(diary.getId())
