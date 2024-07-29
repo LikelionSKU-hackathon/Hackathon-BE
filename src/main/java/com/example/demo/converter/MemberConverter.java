@@ -70,9 +70,10 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.KeywordResultDTO toKeywordResultDTO(String ageGroup,List<Keyword> keywords){
+    public static MemberResponseDTO.KeywordResultDTO toKeywordResultDTO(Long memberId,List<Keyword> keywords){
+
         return MemberResponseDTO.KeywordResultDTO.builder()
-                .age_group(ageGroup)
+                .memberId(memberId)
                 .KeywordList(keywords)
                 .build();
     }

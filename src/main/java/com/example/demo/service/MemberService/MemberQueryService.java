@@ -8,7 +8,7 @@ import java.util.List;
 public interface MemberQueryService {
     Member getMypage (Long MemberId);
 
-    List<Keyword> getKeyword(String age_group);
+    List<Keyword> getKeyword(Long memberId);
 
     Boolean checkEmail(String email);
 

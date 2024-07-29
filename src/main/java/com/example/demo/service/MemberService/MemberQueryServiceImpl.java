@@ -27,8 +27,9 @@ public class MemberQueryServiceImpl implements MemberQueryService{
     }
     //키워드 조회
     @Override
-    public List<Keyword> getKeyword(String age_group){
-        List<Keyword> keywords = keywordRepository.findByAgeGroup(age_group);
+    public List<Keyword> getKeyword(Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        List<Keyword> keywords = keywordRepository.findByAgeGroup(member.getAgeGroup());
         if (keywords.isEmpty()) {
             throw new MemberHandler(ErrorStatus.KEYWORD_NOT_FOUND);
         }

@@ -10,6 +10,7 @@ import com.example.demo.web.dto.MemberRequestDTO;
 import com.example.demo.web.dto.MemberResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,16 +22,17 @@ public class KeywordRestController {
     private final MemberQueryService memberQueryService;
     @GetMapping("/")
     @Operation(summary="키워드 목록 조회API", description="회원의 연령별 키워드 목록을 조회하는 API")
-    public ApiResponse<MemberResponseDTO.KeywordResultDTO> keyword(@RequestParam(name="age_group") String age_group) {
-        List<Keyword> keywords = memberQueryService.getKeyword(age_group);
-        return ApiResponse.onSuccess(MemberConverter.toKeywordResultDTO(age_group, keywords));
+    public ApiResponse<MemberResponseDTO.KeywordResultDTO> keyword(Authentication authentication) {
+        Long memberId = (Long) authentication.getPrincipal();
+        List<Keyword> keywords = memberQueryService.getKeyword(memberId);
+        return ApiResponse.onSuccess(MemberConverter.toKeywordResultDTO(memberId, keywords));
     }
-    @PostMapping("/{memberId}")
+    @PostMapping("/")
     @Operation(summary="키워드 선택 API", description="회원의 키워드 선택 API")
     public ApiResponse<MemberResponseDTO.setKeywordResultDTO> setKeyword(
             @RequestBody MemberRequestDTO.setKeywordDTO request,
-            @PathVariable(name = "memberId") Long memberId) {
-
+            Authentication authentication) {
+        Long memberId = (Long) authentication.getPrincipal();
         Member member = memberCommandService.setKeyword(request, memberId);
         return ApiResponse.onSuccess(MemberConverter.toSetKeywordResultDTO(member));
     }
