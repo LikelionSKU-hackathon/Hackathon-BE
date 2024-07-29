@@ -9,6 +9,7 @@ import com.example.demo.service.MemberService.MemberQueryService;
 import com.example.demo.web.dto.MemberRequestDTO;
 import com.example.demo.web.dto.MemberResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class KeywordRestController {
     @PostMapping("/")
     @Operation(summary="키워드 선택 API", description="회원의 키워드 선택 API")
     public ApiResponse<MemberResponseDTO.setKeywordResultDTO> setKeyword(
-            @RequestBody MemberRequestDTO.setKeywordDTO request,
+            @RequestBody @Valid MemberRequestDTO.setKeywordDTO request,
             Authentication authentication) {
         Long memberId = (Long) authentication.getPrincipal();
         Member member = memberCommandService.setKeyword(request, memberId);
