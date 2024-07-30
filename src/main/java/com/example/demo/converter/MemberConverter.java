@@ -51,6 +51,7 @@ public class MemberConverter {
                 .username(member.getUsername())
                 .email(member.getEmail())
                 .memberId(member.getId())
+                .AgeGroup(member.getAgeGroup())
                 .memberKeyword(member.getMemberKeywordList().stream()
                         .map(memberKeyword -> memberKeyword.getKeyword().getName())
                         .collect(Collectors.toList()))
