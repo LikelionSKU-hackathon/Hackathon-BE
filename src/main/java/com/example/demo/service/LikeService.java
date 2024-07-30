@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -33,6 +34,12 @@ public class LikeService {
 
         Diary diary = diaryOptional.get();
         Member member = memberOptional.get();
+
+        // 이미 좋아요를 추가했는지 확인
+        Optional<Likes> existingLike = likeRepository.findByDiaryAndMember(diary, member);
+        if (existingLike.isPresent()) {
+            throw new RuntimeException("Member has already liked this diary");
+        }
 
         Likes like = Likes.builder()
                 .diary(diary)

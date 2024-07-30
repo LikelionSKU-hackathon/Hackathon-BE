@@ -17,7 +17,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/keyword")
-public class KeywordRestController {
+public class
+KeywordRestController {
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
     @GetMapping("/")

@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.AIComment;
-import com.example.demo.domain.Diary;
-import com.example.demo.domain.Member;
-import com.example.demo.domain.Mood;
+import com.example.demo.domain.*;
+import com.example.demo.repository.AIQuestionRepository;
 import com.example.demo.web.dto.DiaryRequestDTO;
 import com.example.demo.web.dto.DiaryResponseDTO;
 import com.example.demo.repository.DiaryRepository;
@@ -24,7 +22,8 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
     private final MoodRepository moodRepository;
-    private final AICommentService aiCommentService; // AICommentService 주입
+    private final AICommentService aiCommentService;
+    private final AIQuestionRepository aiQuestionRepository;
 
     public DiaryResponseDTO createDiary(DiaryRequestDTO diaryRequestDTO) {
         Optional<Member> memberOptional = memberRepository.findById(diaryRequestDTO.getMemberId());
@@ -40,8 +39,16 @@ public class DiaryService {
         Member member = memberOptional.get();
         Mood mood = moodOptional.get();
 
+        String title = diaryRequestDTO.getTitle();
+        if (diaryRequestDTO.getQuestionId() != null) {
+            Optional<AIQuestion> aiQuestionOptional = aiQuestionRepository.findById(diaryRequestDTO.getQuestionId());
+            if (aiQuestionOptional.isPresent()) {
+                AIQuestion aiQuestion = aiQuestionOptional.get();
+                title = aiQuestion.getContent();
+            }
+        }
         Diary diary = Diary.builder()
-                .title(diaryRequestDTO.getTitle())
+                .title(title)
                 .content(diaryRequestDTO.getContent())
                 .isPublic(diaryRequestDTO.isPublic())
                 .member(member)
@@ -51,7 +58,6 @@ public class DiaryService {
 
         Diary savedDiary = diaryRepository.save(diary);
 
-        // AI 댓글 생성
         aiCommentService.generateAIComment(savedDiary.getId());
 
         return DiaryResponseDTO.builder()
@@ -65,6 +71,53 @@ public class DiaryService {
                 .moodImage(mood.getMoodImage())
                 .createdAt(savedDiary.getCreatedAt())
                 .aiComments(savedDiary.getAiComment() != null ? List.of(savedDiary.getAiComment().getContent()) : null)  // AI 댓글 포함
+                .build();
+    }
+
+    public DiaryResponseDTO createDiaryWithAIQuestion(DiaryRequestDTO diaryRequestDTO) {
+        Optional<Member> memberOptional = memberRepository.findById(diaryRequestDTO.getMemberId());
+        if (!memberOptional.isPresent()) {
+            throw new RuntimeException("Member not found");
+        }
+
+        Optional<Mood> moodOptional = moodRepository.findById(diaryRequestDTO.getMoodId());
+        if (!moodOptional.isPresent()) {
+            throw new RuntimeException("Mood not found");
+        }
+
+        Optional<AIQuestion> aiQuestionOptional = aiQuestionRepository.findById(diaryRequestDTO.getQuestionId());
+        if (!aiQuestionOptional.isPresent()) {
+            throw new RuntimeException("AI Question not found");
+        }
+
+        Member member = memberOptional.get();
+        Mood mood = moodOptional.get();
+        AIQuestion aiQuestion = aiQuestionOptional.get();
+
+        Diary diary = Diary.builder()
+                .title(aiQuestion.getContent())
+                .content(diaryRequestDTO.getContent())
+                .isPublic(diaryRequestDTO.isPublic())
+                .member(member)
+                .mood(mood)
+                .aiQuestion(aiQuestion)
+                .likeCount(0)
+                .build();
+
+        Diary savedDiary = diaryRepository.save(diary);
+        aiCommentService.generateAIComment(savedDiary.getId());
+
+        return DiaryResponseDTO.builder()
+                .id(savedDiary.getId())
+                .title(savedDiary.getTitle())
+                .content(savedDiary.getContent())
+                .isPublic(savedDiary.isPublic())
+                .memberUsername(member.getUsername())
+                .likeCount(savedDiary.getLikeCount())
+                .moodName(mood.getName())
+                .moodImage(mood.getMoodImage())
+                .createdAt(savedDiary.getCreatedAt())
+                .aiComments(savedDiary.getAiComment() != null ? List.of(savedDiary.getAiComment().getContent()) : null)
                 .build();
     }
 

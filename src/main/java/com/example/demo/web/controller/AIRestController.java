@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/ai")
 public class AIRestController {
     private final AICommentService aiCommentService;
+
     @GetMapping("/question")
+
     @Operation(summary="AI 주제 생성 API", description="사용자 키워드 기반 AI 주제 생성 API")
     public ApiResponse<DiaryResponseDTO.AIQuestionDTO> aiQuestion(Authentication authentication){
         Long memberId = (Long) authentication.getPrincipal();

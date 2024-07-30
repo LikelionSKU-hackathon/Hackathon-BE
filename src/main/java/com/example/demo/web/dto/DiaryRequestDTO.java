@@ -11,4 +11,5 @@ public class DiaryRequestDTO {
     private boolean isPublic;
     private Long memberId;
     private Long moodId;
+    private Long questionId;
 }
