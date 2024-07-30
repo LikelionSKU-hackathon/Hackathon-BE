@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,8 +79,6 @@ public class AICommentServiceImpl implements AICommentService {
                 .build();
 
         aiCommentRepository.save(newComment);
-
-
         return diary;
     }
     @Override
@@ -148,5 +147,9 @@ public class AICommentServiceImpl implements AICommentService {
         memberQuestionRepository.save(memberQuestion);
 
         return aiQuestion1;
+    }
+    public Optional<AIQuestion> getAIQuestion(Long memberId) {
+        Optional<MemberQuestion> memberQuestionOptional = memberQuestionRepository.findByMemberId(memberId);
+        return memberQuestionOptional.map(MemberQuestion::getAiQuestion);
     }
 }

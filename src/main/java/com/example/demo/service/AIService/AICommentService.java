@@ -3,8 +3,10 @@ package com.example.demo.service.AIService;
 import com.example.demo.domain.AIQuestion;
 import com.example.demo.domain.Diary;
 
-public interface AICommentService {
-    Diary generateAIComment(Long diaryId);
+import java.util.Optional;
 
+public interface AICommentService {
     AIQuestion generateAIQuestion(Long memberId);
+    Diary generateAIComment(Long diaryId);
+    Optional<AIQuestion> getAIQuestion(Long memberId);
 }

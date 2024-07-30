@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +35,28 @@ public class DiaryRestController {
     public ResponseEntity<DiaryResponseDTO> createDiary(@PathVariable Long memberId, @RequestBody DiaryRequestDTO diaryRequestDTO) {
         diaryRequestDTO.setMemberId(memberId); // Set the memberId from the path variable
         DiaryResponseDTO diaryResponseDTO = diaryService.createDiary(diaryRequestDTO);
+        return ResponseEntity.ok(diaryResponseDTO);
+    }
+    @GetMapping("/{memberId}/question")
+    @Operation(summary = "AI 주제 조회 API", description = "특정 회원의 AI 주제 조회")
+    public ResponseEntity<DiaryResponseDTO.AIQuestionDTO> getAIQuestion(@PathVariable Long memberId) {
+        Optional<AIQuestion> aiQuestionOptional = aiCommentService.getAIQuestion(memberId);
+        if (!aiQuestionOptional.isPresent()) {
+            throw new RuntimeException("AI Question not found");
+        }
+        AIQuestion aiQuestion = aiQuestionOptional.get();
+        return ResponseEntity.ok(new DiaryResponseDTO.AIQuestionDTO(
+                aiQuestion.getId(),
+                aiQuestion.getCategory(),
+                aiQuestion.getContent()
+        ));
+    }
+
+    @PostMapping("/question/{memberId}/diaries")
+    @Operation(summary = "AI 주제로 일기 작성 API", description = "특정 회원의 AI 주제로 새로운 일기 작성")
+    public ResponseEntity<DiaryResponseDTO> createDiaryWithAIQuestion(@PathVariable Long memberId, @RequestBody DiaryRequestDTO diaryRequestDTO) {
+        diaryRequestDTO.setMemberId(memberId); // Set the memberId from the path variable
+        DiaryResponseDTO diaryResponseDTO = diaryService.createDiaryWithAIQuestion(diaryRequestDTO);
         return ResponseEntity.ok(diaryResponseDTO);
     }
     @GetMapping("/{diaryId}")
