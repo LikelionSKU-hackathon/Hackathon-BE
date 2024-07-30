@@ -14,7 +14,7 @@ public class Keyword extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String name; // ex : 퇴직 후의 삶이 걱정돼요.
 
     @Column(nullable = false, length= 100 )

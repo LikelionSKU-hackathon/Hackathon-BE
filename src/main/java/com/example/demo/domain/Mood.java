@@ -20,7 +20,7 @@ public class Mood extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String moodImage;
 
     @OneToMany(mappedBy ="mood", cascade= CascadeType.ALL)
