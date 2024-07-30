@@ -30,16 +30,18 @@ public class DiaryRestController {
     private final DiaryQueryService diaryQueryService;
     private final LikeService likeService;
 
-    @PostMapping("/{memberId}/diaries")
+    @PostMapping("/diaries")
     @Operation(summary = "일기 작성 API", description = "특정 회원의 새로운 일기 작성")
-    public ResponseEntity<DiaryResponseDTO> createDiary(@PathVariable Long memberId, @RequestBody DiaryRequestDTO diaryRequestDTO) {
+    public ResponseEntity<DiaryResponseDTO> createDiary(Authentication authentication, @RequestBody DiaryRequestDTO diaryRequestDTO) {
+        Long memberId = (Long) authentication.getPrincipal();
         diaryRequestDTO.setMemberId(memberId); // Set the memberId from the path variable
         DiaryResponseDTO diaryResponseDTO = diaryService.createDiary(diaryRequestDTO);
         return ResponseEntity.ok(diaryResponseDTO);
     }
-    @GetMapping("/{memberId}/question")
+    @GetMapping("/question")
     @Operation(summary = "AI 주제 조회 API", description = "특정 회원의 AI 주제 조회")
-    public ResponseEntity<DiaryResponseDTO.AIQuestionDTO> getAIQuestion(@PathVariable Long memberId) {
+    public ResponseEntity<DiaryResponseDTO.AIQuestionDTO> getAIQuestion(Authentication authentication) {
+        Long memberId = (Long) authentication.getPrincipal();
         Optional<AIQuestion> aiQuestionOptional = aiCommentService.getAIQuestion(memberId);
         if (!aiQuestionOptional.isPresent()) {
             throw new RuntimeException("AI Question not found");
@@ -52,9 +54,10 @@ public class DiaryRestController {
         ));
     }
 
-    @PostMapping("/question/{memberId}/diaries")
+    @PostMapping("/question/diaries")
     @Operation(summary = "AI 주제로 일기 작성 API", description = "특정 회원의 AI 주제로 새로운 일기 작성")
-    public ResponseEntity<DiaryResponseDTO> createDiaryWithAIQuestion(@PathVariable Long memberId, @RequestBody DiaryRequestDTO diaryRequestDTO) {
+    public ResponseEntity<DiaryResponseDTO> createDiaryWithAIQuestion(Authentication authentication, @RequestBody DiaryRequestDTO diaryRequestDTO) {
+        Long memberId = (Long) authentication.getPrincipal();
         diaryRequestDTO.setMemberId(memberId); // Set the memberId from the path variable
         DiaryResponseDTO diaryResponseDTO = diaryService.createDiaryWithAIQuestion(diaryRequestDTO);
         return ResponseEntity.ok(diaryResponseDTO);
@@ -66,9 +69,10 @@ public class DiaryRestController {
         return ResponseEntity.ok(diaryResponseDTO);
     }
 
-    @GetMapping("/{memberId}/diaries")
+    @GetMapping("/diaries")
     @Operation(summary = "회원 일기 조회 API", description = "특정 회원의 모든 일기 조회")
-    public ResponseEntity<List<DiaryResponseDTO>> getDiariesByMember(@PathVariable Long memberId) {
+    public ResponseEntity<List<DiaryResponseDTO>> getDiariesByMember(Authentication authentication) {
+        Long memberId = (Long) authentication.getPrincipal();
         List<DiaryResponseDTO> diaryResponseDTOList = diaryService.getDiariesByMember(memberId);
         return ResponseEntity.ok(diaryResponseDTOList);
     }
