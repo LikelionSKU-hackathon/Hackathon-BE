@@ -22,19 +22,19 @@ public class
 KeywordRestController {
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
-    @GetMapping("/")
+    @GetMapping("/{memberId}")
     @Operation(summary="키워드 목록 조회API", description="회원의 연령별 키워드 목록을 조회하는 API")
-    public ApiResponse<MemberResponseDTO.KeywordResultDTO> keyword(Authentication authentication) {
-        Long memberId = (Long) authentication.getPrincipal();
+    public ApiResponse<MemberResponseDTO.KeywordResultDTO> keyword(@PathVariable(name="memberId") Long memberId) {
         List<Keyword> keywords = memberQueryService.getKeyword(memberId);
         return ApiResponse.onSuccess(MemberConverter.toKeywordResultDTO(memberId, keywords));
     }
-    @PostMapping("/")
+    @PostMapping("/{memberId}")
     @Operation(summary="키워드 선택 API", description="회원의 키워드 선택 API")
     public ApiResponse<MemberResponseDTO.setKeywordResultDTO> setKeyword(
             @RequestBody @Valid MemberRequestDTO.setKeywordDTO request,
-            Authentication authentication) {
-        Long memberId = (Long) authentication.getPrincipal();
+            @PathVariable(name="memberId") Long memberId) {
+
+
         Member member = memberCommandService.setKeyword(request, memberId);
         return ApiResponse.onSuccess(MemberConverter.toSetKeywordResultDTO(member));
     }
