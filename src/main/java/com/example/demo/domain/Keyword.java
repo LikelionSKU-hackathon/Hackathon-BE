@@ -20,6 +20,9 @@ public class Keyword extends BaseEntity {
     @Column(nullable = false, length= 100 )
     private String category; // ex : 건강 문제
 
+    @Column(nullable = false, length=50)
+    private String emoji;
+
     @Column(nullable=false, length =50)
     private String ageGroup;
 

@@ -34,6 +34,7 @@ KeywordRestController {
             @RequestBody @Valid MemberRequestDTO.setKeywordDTO request,
             @PathVariable(name="memberId") Long memberId) {
 
+
         Member member = memberCommandService.setKeyword(request, memberId);
         return ApiResponse.onSuccess(MemberConverter.toSetKeywordResultDTO(member));
     }
