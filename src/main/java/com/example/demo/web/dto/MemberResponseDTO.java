@@ -36,6 +36,7 @@ public class MemberResponseDTO {
         Long memberId;
         String username;
         String email;
+        String AgeGroup;
         List<String> memberKeyword;
         String profileImage;
     }

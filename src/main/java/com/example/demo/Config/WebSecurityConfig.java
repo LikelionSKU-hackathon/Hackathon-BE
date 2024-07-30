@@ -59,7 +59,7 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
+    //cors 설정 (모든 도메인 오픈)
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -72,7 +72,7 @@ public class WebSecurityConfig {
 
         return source;
     }
-
+    // passwordEncoder 를 통해 비밀번호 암호화
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

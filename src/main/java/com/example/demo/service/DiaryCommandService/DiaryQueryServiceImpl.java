@@ -23,8 +23,8 @@ public class DiaryQueryServiceImpl implements DiaryQueryService{
 
     @Transactional(readOnly = true)
     public DiaryResponseDTO.EmojiResultDTO getDiariesByMonth(int year, int month, Long memberId) {
-        List<Diary> diaries = diaryRepository.findByMemberIdAndMonth(memberId, month, year);
-        List<DiaryResponseDTO.EmojiDTO> emojiDTOList = diaries.stream()
+        List<Diary> diaries = diaryRepository.findByMemberIdAndMonth(memberId, month, year);// memberId와 month를 기준으로 diaryList를 반환받음
+        List<DiaryResponseDTO.EmojiDTO> emojiDTOList = diaries.stream() //diary 객체를 diaryConverter를 통해 emojiDTO로 만들고 그걸 list로 만들어 반환
                 .map(diaryConverter::convertToEmojiDto)
                 .collect(Collectors.toList());
         return DiaryResponseDTO.EmojiResultDTO.builder().emojiDTOList(emojiDTOList).build();
