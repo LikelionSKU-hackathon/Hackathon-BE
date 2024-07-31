@@ -2,9 +2,9 @@ spring:
   application:
     name: demo
   datasource:
-    url: jdbc:mysql://skuhackathon-dev.cvnrrtf0fql4.ap-northeast-2.rds.amazonaws.com:3306/diary
-    username: root
-    password: kimsoyun1!
+    url: ${AWS_DB_URL}
+    username: ${AWS_DB_USERNAME}
+    password: ${AWS_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   sql:
@@ -59,13 +59,13 @@ cloud:
     stack:
       auto: false
     credentials:
-      accessKey: AKIA6LCEA6ZU4LBMFOPH
-      secretKey: 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
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
 jwt-secret: ThisStatementISJwtSecretKeyDoNotUseThisStatement
-
 
 openai:
   model: gpt-4o
   api:
     url: https://api.openai.com/v1/chat/completions
-    key: sk-proj-uQpHjh3XcBEniaAbaZFiT3BlbkFJK9oIYzj09AR1tZ664jSx
+    key: ${AWS_OPENAI_KEY}
+
