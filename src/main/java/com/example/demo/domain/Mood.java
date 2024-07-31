@@ -23,6 +23,6 @@ public class Mood extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String moodImage;
 
-    @OneToMany(mappedBy ="mood", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy ="mood", cascade= CascadeType.ALL, fetch=FetchType.LAZY)
     private List<Diary> diaryList = new ArrayList<>();
 }

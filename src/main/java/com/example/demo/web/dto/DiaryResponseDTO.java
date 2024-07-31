@@ -63,7 +63,7 @@ public class DiaryResponseDTO {
         Long diaryId;
         String title;
         String content;
-        Mood mood;
+        String moodImage;
         MemberDTO member;
     }
 
@@ -76,8 +76,17 @@ public class DiaryResponseDTO {
         String username;
         String ageGroup;
         String profileImage;
-        List<String> keywordList;
+        List<KeywordDTO> keywordList;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class KeywordDTO {
+        String category;
+    }
+
 
     @Builder
     @Getter

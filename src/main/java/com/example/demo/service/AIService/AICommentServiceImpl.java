@@ -96,10 +96,11 @@ public class AICommentServiceImpl implements AICommentService {
 
         String prompt = "You are an AI diary subject question generator that generates Korean answers based on your three keywords and age group. " +
                 "Based on the user's current three keywords and age group you provide, you should create a diary theme that can reflect on your day. " +
-                "Your answers should always be polite. " +
+                "Your answer should always be polite and answer in Korean " +
                 "Considering that the three keywords I currently provide are the user's current situation, I set one of the user's current keywords as the main keyword and create a diary topic related to this. " +
                 "You have to write a diary topic in one line. " +
-                "You must return the selected main keyword and generated diary theme in the form (main keyword, diary topic).\n\n" +
+                "You must return the selected main keyword and generated diary theme in the form (selected main keyword, diary topic).\n\n" +
+                "This form should not contain anything else, but only the result value will be returned.\n\n"+
                 "keywords: " + keyword1 + ", " + keyword2 + ", " + keyword3 + "\n" +
                 "age group: " + ageGroup;
 
