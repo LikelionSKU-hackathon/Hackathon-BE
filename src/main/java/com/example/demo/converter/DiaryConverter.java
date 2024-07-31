@@ -7,6 +7,9 @@ import com.example.demo.domain.Member;
 import com.example.demo.web.dto.DiaryResponseDTO;
 import com.example.demo.web.dto.MemberResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -14,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 @Component
 public class DiaryConverter {
+    private static final Logger log = LoggerFactory.getLogger(DiaryConverter.class);
     //  AIComment 결과값 반환(moodId, moodName, aiCommentList(ai comment 1개만 받도록), diaryTitle, diaryContent)
     public static DiaryResponseDTO.AiCommentResultDTO aiCommentResultDTO(Diary diary){
         return DiaryResponseDTO.AiCommentResultDTO.builder()
@@ -31,19 +35,20 @@ public class DiaryConverter {
                         .diaryId(diary.getId())
                         .title(diary.getTitle())
                         .content(diary.getContent())
-                        .mood(diary.getMood())
+                        .moodImage(diary.getMood().getMoodImage())
                         .member(DiaryResponseDTO.MemberDTO.builder()
                                 .memberId(diary.getMember().getId())
                                 .username(diary.getMember().getUsername())
                                 .ageGroup(diary.getMember().getAgeGroup())
                                 .profileImage(diary.getMember().getProfileImage())
                                 .keywordList(diary.getMember().getMemberKeywordList().stream()
-                                        .map(memberKeyword->memberKeyword.getKeyword().getCategory())
+                                        .map(memberKeyword -> DiaryResponseDTO.KeywordDTO.builder()
+                                                .category(memberKeyword.getKeyword().getCategory())
+                                                .build())
                                         .collect(Collectors.toList()))
                                 .build())
                         .build())
                 .collect(Collectors.toList());
-
         return DiaryResponseDTO.PlusDiaryResultDTO.builder()
                 .diaryList(diaryDTOList)
                 .build();

@@ -37,8 +37,18 @@ public class MemberResponseDTO {
         String username;
         String email;
         String AgeGroup;
-        List<String> memberKeyword;
+        List<KeywordDTO> keywordList;
         String profileImage;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class KeywordDTO{
+        String emoji;
+        String category;
+        String name;
     }
 
     @Builder

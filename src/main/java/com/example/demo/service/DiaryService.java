@@ -58,7 +58,7 @@ public class DiaryService {
 
         Diary savedDiary = diaryRepository.save(diary);
 
-        aiCommentService.generateAIComment(savedDiary.getId());
+        //aiCommentService.generateAIComment(savedDiary.getId());
 
         return DiaryResponseDTO.builder()
                 .id(savedDiary.getId())
@@ -70,7 +70,6 @@ public class DiaryService {
                 .moodName(mood.getName())
                 .moodImage(mood.getMoodImage())
                 .createdAt(savedDiary.getCreatedAt())
-                .aiComments(savedDiary.getAiComment() != null ? List.of(savedDiary.getAiComment().getContent()) : null)  // AI 댓글 포함
                 .build();
     }
 
@@ -105,7 +104,7 @@ public class DiaryService {
                 .build();
 
         Diary savedDiary = diaryRepository.save(diary);
-        aiCommentService.generateAIComment(savedDiary.getId());
+        //aiCommentService.generateAIComment(savedDiary.getId());
 
         return DiaryResponseDTO.builder()
                 .id(savedDiary.getId())
@@ -117,7 +116,7 @@ public class DiaryService {
                 .moodName(mood.getName())
                 .moodImage(mood.getMoodImage())
                 .createdAt(savedDiary.getCreatedAt())
-                .aiComments(savedDiary.getAiComment() != null ? List.of(savedDiary.getAiComment().getContent()) : null)
+                //.aiComments(savedDiary.getAiComment() != null ? List.of(savedDiary.getAiComment().getContent()) : null)
                 .build();
     }
 

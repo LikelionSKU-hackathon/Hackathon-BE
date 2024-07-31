@@ -50,7 +50,7 @@ public class Member extends BaseEntity  {
     @Column(nullable = true, length =255)
     private String profileImage;
 
-    @OneToMany(mappedBy ="member", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy ="member", cascade= CascadeType.ALL, fetch=FetchType.LAZY)
     private  List<MemberKeyword> memberKeywordList = new ArrayList<>();
 
     @OneToMany(mappedBy="member", cascade=CascadeType.ALL)

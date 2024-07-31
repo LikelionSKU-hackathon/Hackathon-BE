@@ -13,6 +13,7 @@ import com.example.demo.service.LikeService;
 import com.example.demo.web.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/diary")
+@Slf4j
 public class DiaryRestController {
 
     private final DiaryService diaryService;
@@ -41,6 +43,7 @@ public class DiaryRestController {
     @GetMapping("/question")
     @Operation(summary = "AI 주제 조회 API", description = "특정 회원의 AI 주제 조회")
     public ResponseEntity<DiaryResponseDTO.AIQuestionDTO> getAIQuestion(Authentication authentication) {
+
         Long memberId = (Long) authentication.getPrincipal();
         Optional<AIQuestion> aiQuestionOptional = aiCommentService.getAIQuestion(memberId);
         if (!aiQuestionOptional.isPresent()) {
@@ -64,7 +67,7 @@ public class DiaryRestController {
     }
     @GetMapping("/{diaryId}")
     @Operation(summary = "일기 조회 API", description = "특정 일기 ID를 통해 일기 항목 조회")
-    public ResponseEntity<DiaryResponseDTO> getDiary(@PathVariable Long diaryId) {
+    public ResponseEntity<DiaryResponseDTO> getDiary(@PathVariable(name="diaryId") Long diaryId) {
         DiaryResponseDTO diaryResponseDTO = diaryService.getDiary(diaryId);
         return ResponseEntity.ok(diaryResponseDTO);
     }
@@ -87,6 +90,7 @@ public class DiaryRestController {
     @Operation(summary="더 많은 이야기 구경하기 API", description=" 다른 사용자들이 작성한 글을 조회하는 API")
     public ApiResponse<DiaryResponseDTO.PlusDiaryResultDTO> diaryList(){
         List<Diary> diaries = diaryQueryService.getDiaryList();
+        log.info("다이어리 목록:{}",diaries);
         return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
     }
 
