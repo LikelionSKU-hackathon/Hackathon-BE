@@ -11,6 +11,8 @@ import com.example.demo.service.AIService.AICommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -193,6 +195,23 @@ public class DiaryService {
                 .moodImage(mood != null ? mood.getMoodImage() : null)
                 .createdAt(diary.getCreatedAt())
                 .aiComments(aiComment != null ? List.of(aiComment.getContent()) : null)  // AI 댓글 포함
+                .build();
+    }
+    public DiaryResponseDTO.DiaryPreInfoDTO getDiaryPreInfo(Long memberId) {
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+        if (!memberOptional.isPresent()) {
+            throw new RuntimeException("Member not found");
+        }
+        Member member = memberOptional.get();
+        int diaryCount = diaryRepository.countByMember(member);
+
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy년 M월 d일"));
+        String username = member.getUsername();
+
+        return DiaryResponseDTO.DiaryPreInfoDTO.builder()
+                .date(date)
+                .username(username)
+                .diaryCount(diaryCount + 1) // 작성할 글의 순서이므로 +1
                 .build();
     }
 }
