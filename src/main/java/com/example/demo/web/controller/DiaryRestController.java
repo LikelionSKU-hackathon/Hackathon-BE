@@ -134,6 +134,11 @@ public class DiaryRestController {
         DiaryResponseDTO diaryResponseDTO = diaryService.getMostLikedDiary();
         return ResponseEntity.ok(diaryResponseDTO);
     }
-
+    @GetMapping("/pre-info/{memberId}")
+    @Operation(summary = "일기 작성 전 정보 조회 API", description = "일기를 작성하기 전에 필요한 정보를 조회하는 API")
+    public ApiResponse<DiaryResponseDTO.DiaryPreInfoDTO> getDiaryPreInfo(@PathVariable Long memberId) {
+        DiaryResponseDTO.DiaryPreInfoDTO diaryPreInfoDTO = diaryService.getDiaryPreInfo(memberId);
+        return ApiResponse.onSuccess(diaryPreInfoDTO);
+    }
 
 }

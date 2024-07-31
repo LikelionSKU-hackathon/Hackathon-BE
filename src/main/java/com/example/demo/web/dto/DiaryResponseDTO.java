@@ -105,6 +105,15 @@ public class DiaryResponseDTO {
     public static class EmojiResultDTO{
         List<EmojiDTO> emojiDTOList;
     }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DiaryPreInfoDTO {
+        private String date;
+        private String username;
+        private int diaryCount;
+    }
 
 
 
