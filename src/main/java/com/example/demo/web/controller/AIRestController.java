@@ -26,7 +26,7 @@ public class AIRestController {
     public ApiResponse<DiaryResponseDTO.AIQuestionDTO> aiQuestion(Authentication authentication){
         Long memberId = (Long) authentication.getPrincipal();
         AIQuestion aiQuestion = aiCommentService.generateAIQuestion(memberId);
-        return ApiResponse.onSuccess(DiaryConverter.aiQuestionDTO(aiQuestion));
+        return ApiResponse.onSuccess(DiaryConverter.aiQuestionDTO(aiQuestion,memberId));
     }
 
     @GetMapping("comment/{diaryId}")

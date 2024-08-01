@@ -24,7 +24,7 @@ public class MemberQuestion extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="AIQuestion_id")
+    @JoinColumn(name="question_id")
     private AIQuestion aiQuestion;
 
 }

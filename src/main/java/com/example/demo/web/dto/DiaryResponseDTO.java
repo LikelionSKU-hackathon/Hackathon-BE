@@ -93,6 +93,7 @@ public class DiaryResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class AIQuestionDTO {
+        Long questionId;
         Long memberId;
         String category;
         String content;
