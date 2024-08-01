@@ -54,11 +54,7 @@ public class DiaryConverter {
                 .build();
     }
     //aiQuestion 결과값 반환(aiQuestion의 카테고리와, 질문 내용, 해당 멤버의 값 반환)
-    public static DiaryResponseDTO.AIQuestionDTO aiQuestionDTO(AIQuestion aiQuestion){
-        Long memberId = null;
-        if (aiQuestion.getMemberQuestions() != null && !aiQuestion.getMemberQuestions().isEmpty()) {
-            memberId = aiQuestion.getMemberQuestions().get(0).getMember().getId();
-        }
+    public static DiaryResponseDTO.AIQuestionDTO aiQuestionDTO(AIQuestion aiQuestion, Long memberId){
 
         return DiaryResponseDTO.AIQuestionDTO.builder()
                 .questionId(aiQuestion.getId())
