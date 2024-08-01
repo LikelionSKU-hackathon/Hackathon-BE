@@ -88,9 +88,15 @@ public class MemberConverter {
     }
     //keyword 선택 값 반환
     public static MemberResponseDTO.setKeywordResultDTO toSetKeywordResultDTO(Member member) {
+        List<MemberResponseDTO.MemberKeywordDTO> keywordDTOList = member.getMemberKeywordList().stream()
+                .map(memberKeyword -> MemberResponseDTO.MemberKeywordDTO.builder()
+                        .keywordId(memberKeyword.getKeyword().getId())
+                        .build())
+                .collect(Collectors.toList());
+
         return MemberResponseDTO.setKeywordResultDTO.builder()
                 .memberId(member.getId())
-                .keywordList(member.getMemberKeywordList())
+                .keywordList(keywordDTOList)
                 .build();
     }
 

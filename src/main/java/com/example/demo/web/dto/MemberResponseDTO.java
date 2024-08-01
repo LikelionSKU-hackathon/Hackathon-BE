@@ -78,9 +78,18 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class setKeywordResultDTO {
         private Long memberId;
-        private List<MemberKeyword> keywordList;
+        private List<MemberKeywordDTO> keywordList;
 
     }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberKeywordDTO {
+        private Long keywordId;
+
+    }
+
 
 
 
