@@ -61,6 +61,7 @@ public class DiaryConverter {
         }
 
         return DiaryResponseDTO.AIQuestionDTO.builder()
+                .questionId(aiQuestion.getId())
                 .category(aiQuestion.getCategory())
                 .content(aiQuestion.getContent())
                 .memberId(memberId)

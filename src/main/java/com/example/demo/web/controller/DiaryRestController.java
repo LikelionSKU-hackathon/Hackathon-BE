@@ -52,6 +52,7 @@ public class DiaryRestController {
         AIQuestion aiQuestion = aiQuestionOptional.get();
         return ResponseEntity.ok(new DiaryResponseDTO.AIQuestionDTO(
                 aiQuestion.getId(),
+                memberId,
                 aiQuestion.getCategory(),
                 aiQuestion.getContent()
         ));
