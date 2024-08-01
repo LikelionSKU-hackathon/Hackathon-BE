@@ -174,29 +174,6 @@ public class DiaryService {
                 .collect(Collectors.toList());
     }
 
-    public DiaryResponseDTO getMostLikedDiary() {
-        Optional<Diary> diaryOptional = diaryRepository.findTopByOrderByLikeCountDesc();
-        if (!diaryOptional.isPresent()) {
-            throw new RuntimeException("No diaries found");
-        }
-
-        Diary diary = diaryOptional.get();
-        Mood mood = diary.getMood();
-        AIComment aiComment = diary.getAiComment();
-
-        return DiaryResponseDTO.builder()
-                .id(diary.getId())
-                .title(diary.getTitle())
-                .content(diary.getContent())
-                .isPublic(diary.isPublic())
-                .memberUsername(diary.getMember().getUsername())
-                .likeCount(diary.getLikeCount())
-                .moodName(mood != null ? mood.getName() : null)
-                .moodImage(mood != null ? mood.getMoodImage() : null)
-                .createdAt(diary.getCreatedAt())
-                .aiComments(aiComment != null ? List.of(aiComment.getContent()) : null)  // AI 댓글 포함
-                .build();
-    }
     public DiaryResponseDTO.DiaryPreInfoDTO getDiaryPreInfo(Long memberId) {
         Optional<Member> memberOptional = memberRepository.findById(memberId);
         if (!memberOptional.isPresent()) {
@@ -213,5 +190,31 @@ public class DiaryService {
                 .username(username)
                 .diaryCount(diaryCount + 1) // 작성할 글의 순서이므로 +1
                 .build();
+    }
+    public List<DiaryResponseDTO> getMostLikedDiaries() {
+        List<Diary> diaries = diaryRepository.findTop2ByOrderByLikeCountDesc();
+        if (diaries.isEmpty()) {
+            throw new RuntimeException("No diaries found");
+        }
+
+        return diaries.stream()
+                .map(diary -> {
+                    Mood mood = diary.getMood();
+                    AIComment aiComment = diary.getAiComment();
+
+                    return DiaryResponseDTO.builder()
+                            .id(diary.getId())
+                            .title(diary.getTitle())
+                            .content(diary.getContent())
+                            .isPublic(diary.isPublic())
+                            .memberUsername(diary.getMember().getUsername())
+                            .likeCount(diary.getLikeCount())
+                            .moodName(mood != null ? mood.getName() : null)
+                            .moodImage(mood != null ? mood.getMoodImage() : null)
+                            .createdAt(diary.getCreatedAt())
+                            .aiComments(aiComment != null ? List.of(aiComment.getContent()) : null)  // AI 댓글 포함
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 }

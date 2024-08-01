@@ -16,7 +16,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     List<Diary> findByMemberIdAndMonth(@Param("memberId") Long memberId, @Param("month") int month, @Param("year") int year);
 
     List<Diary> findByMemberId(Long memberId);
-    Optional<Diary> findTopByOrderByLikeCountDesc();
+    List<Diary> findTop2ByOrderByLikeCountDesc();
     int countByMember(Member member);
 
 }

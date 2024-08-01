@@ -134,10 +134,10 @@ public class DiaryRestController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/popular")
-    @Operation(summary = "역대 좋아요 수가 가장 많은 일기 조회 API", description = "역대 좋아요 갯수가 가장 많은 일기 조회")
-    public ResponseEntity<DiaryResponseDTO> getMostLikedDiary() {
-        DiaryResponseDTO diaryResponseDTO = diaryService.getMostLikedDiary();
-        return ResponseEntity.ok(diaryResponseDTO);
+    @Operation(summary = "역대 좋아요 수가 가장 많은 두 개의 일기 조회 API", description = "역대 좋아요 갯수가 가장 많은 두 개의 일기 조회")
+    public ResponseEntity<List<DiaryResponseDTO>> getMostLikedDiaries() {
+        List<DiaryResponseDTO> diaryResponseDTOs = diaryService.getMostLikedDiaries();
+        return ResponseEntity.ok(diaryResponseDTOs);
     }
     @GetMapping("/pre-info/{memberId}")
     @Operation(summary = "일기 작성 전 정보 조회 API", description = "일기를 작성하기 전에 필요한 정보를 조회하는 API")
