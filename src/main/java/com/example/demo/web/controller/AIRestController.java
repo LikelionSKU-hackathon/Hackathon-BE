@@ -29,11 +29,4 @@ public class AIRestController {
         return ApiResponse.onSuccess(DiaryConverter.aiQuestionDTO(aiQuestion,memberId));
     }
 
-    @GetMapping("comment/{diaryId}")
-    @Operation(summary="AI 댓글 조회 API", description="AI 댓글을 생성하고 조회하는 API")
-    public ApiResponse<DiaryResponseDTO.AiCommentResultDTO> aicomment(@PathVariable(name="diaryId")Long diaryId){
-
-        Diary diary = aiCommentService.generateAIComment(diaryId);
-        return ApiResponse.onSuccess(DiaryConverter.aiCommentResultDTO(diary));
-    }
 }

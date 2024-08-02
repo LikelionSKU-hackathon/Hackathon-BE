@@ -1,14 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.*;
-import com.example.demo.repository.AIQuestionRepository;
+import com.example.demo.repository.*;
 import com.example.demo.web.dto.DiaryRequestDTO;
 import com.example.demo.web.dto.DiaryResponseDTO;
-import com.example.demo.repository.DiaryRepository;
-import com.example.demo.repository.MemberRepository;
-import com.example.demo.repository.MoodRepository;
 import com.example.demo.service.AIService.AICommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,6 +24,7 @@ public class DiaryService {
     private final MoodRepository moodRepository;
     private final AICommentService aiCommentService;
     private final AIQuestionRepository aiQuestionRepository;
+    private final LikeRepository likeRepository;
 
     public DiaryResponseDTO createDiary(DiaryRequestDTO diaryRequestDTO) {
         Optional<Member> memberOptional = memberRepository.findById(diaryRequestDTO.getMemberId());
@@ -149,7 +148,6 @@ public class DiaryService {
                 .aiComments(aiComment != null ? List.of(aiComment.getContent()) : null)  // AI 댓글 포함
                 .build();
     }
-
     public List<DiaryResponseDTO> getDiariesByMember(Long memberId) {
         Optional<Member> memberOptional = memberRepository.findById(memberId);
         if (!memberOptional.isPresent()) {
@@ -220,5 +218,18 @@ public class DiaryService {
                             .build();
                 })
                 .collect(Collectors.toList());
+    }
+    public boolean getILiked(Long diaryId, Authentication authentication) {
+        Long memberId = (Long) authentication.getPrincipal();
+        Optional<Diary> diaryOptional = diaryRepository.findById(diaryId);
+        if (!diaryOptional.isPresent()) {
+            throw new RuntimeException("Diary not found");
+        }
+
+        Diary diary = diaryOptional.get();
+        boolean iLiked = likeRepository.findByDiaryAndMember(diary, memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"))).isPresent();
+        diary.setILiked(iLiked);
+
+        return iLiked;
     }
 }

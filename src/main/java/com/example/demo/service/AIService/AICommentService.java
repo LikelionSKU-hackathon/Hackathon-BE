@@ -8,5 +8,4 @@ import java.util.Optional;
 public interface AICommentService {
     AIQuestion generateAIQuestion(Long memberId);
     Diary generateAIComment(Long diaryId);
-    Optional<AIQuestion> getAIQuestion(Long memberId);
 }
