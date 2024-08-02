@@ -193,32 +193,10 @@ public class DiaryService {
                 .diaryCount(diaryCount + 1) // 작성할 글의 순서이므로 +1
                 .build();
     }
-    public List<DiaryResponseDTO> getMostLikedDiaries() {
-        List<Diary> diaries = diaryRepository.findTop2ByOrderByLikeCountDesc();
-        if (diaries.isEmpty()) {
-            throw new RuntimeException("No diaries found");
-        }
-
-        return diaries.stream()
-                .map(diary -> {
-                    Mood mood = diary.getMood();
-                    AIComment aiComment = diary.getAiComment();
-
-                    return DiaryResponseDTO.builder()
-                            .id(diary.getId())
-                            .title(diary.getTitle())
-                            .content(diary.getContent())
-                            .isPublic(diary.isPublic())
-                            .memberUsername(diary.getMember().getUsername())
-                            .likeCount(diary.getLikeCount())
-                            .moodName(mood != null ? mood.getName() : null)
-                            .moodImage(mood != null ? mood.getMoodImage() : null)
-                            .createdAt(diary.getCreatedAt())
-                            .aiComments(aiComment != null ? List.of(aiComment.getContent()) : null)  // AI 댓글 포함
-                            .build();
-                })
-                .collect(Collectors.toList());
+    public List<Diary> getMostLikedDiaries() {
+        return diaryRepository.findTop2ByOrderByLikeCountDesc();
     }
+
     public boolean getILiked(Long diaryId, Authentication authentication) {
         Long memberId = (Long) authentication.getPrincipal();
         Optional<Diary> diaryOptional = diaryRepository.findById(diaryId);

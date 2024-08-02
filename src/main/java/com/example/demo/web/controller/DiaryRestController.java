@@ -71,7 +71,12 @@ public class DiaryRestController {
         log.info("다이어리 목록:{}",diaries);
         return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
     }
-
+    @GetMapping("/popular")
+    @Operation(summary = "역대 좋아요 수가 가장 많은 두 개의 일기 조회 API", description = "역대 좋아요 갯수가 가장 많은 두 개의 일기 조회")
+    public ApiResponse<DiaryResponseDTO.PlusDiaryResultDTO> getMostLikedDiaries() {
+        List<Diary> diaries = diaryService.getMostLikedDiaries();
+        return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
+    }
     @GetMapping("/month/{year}/{month}")
     @Operation(summary="이번 달 나의 쓰임 API(이모지 조회)", description=" 이번 달 사용자 일기의 기분을 모아보는 API")
     public ApiResponse<DiaryResponseDTO.EmojiResultDTO> emoji(@PathVariable(name = "year") int year,
@@ -110,12 +115,7 @@ public class DiaryRestController {
         likeService.removeLike(likeId);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/popular")
-    @Operation(summary = "역대 좋아요 수가 가장 많은 두 개의 일기 조회 API", description = "역대 좋아요 갯수가 가장 많은 두 개의 일기 조회")
-    public ResponseEntity<List<DiaryResponseDTO>> getMostLikedDiaries() {
-        List<DiaryResponseDTO> diaryResponseDTOs = diaryService.getMostLikedDiaries();
-        return ResponseEntity.ok(diaryResponseDTOs);
-    }
+
     @GetMapping("/pre-info/{memberId}")
     @Operation(summary = "일기 작성 전 정보 조회 API", description = "일기를 작성하기 전에 필요한 정보를 조회하는 API")
     public ApiResponse<DiaryResponseDTO.DiaryPreInfoDTO> getDiaryPreInfo(@PathVariable Long memberId) {
