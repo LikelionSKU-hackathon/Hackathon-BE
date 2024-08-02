@@ -9,3 +9,4 @@ public class LikeRequestDTO {
     private Long diaryId;
     private Long memberId;
 }
+
