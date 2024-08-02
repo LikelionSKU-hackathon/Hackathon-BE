@@ -26,6 +26,7 @@ public class DiaryResponseDTO {
     private Long id;
     private String title;
     private String content;
+    private String category;
     private boolean isPublic;
     private String memberUsername;
     private int likeCount;
@@ -63,6 +64,7 @@ public class DiaryResponseDTO {
         Long diaryId;
         String title;
         String content;
+        String category;
         String moodImage;
         MemberDTO member;
     }
