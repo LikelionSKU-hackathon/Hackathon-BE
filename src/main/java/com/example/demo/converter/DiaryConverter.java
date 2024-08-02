@@ -35,6 +35,7 @@ public class DiaryConverter {
                         .diaryId(diary.getId())
                         .title(diary.getTitle())
                         .content(diary.getContent())
+                        .category(diary.getCategory())
                         .moodImage(diary.getMood().getMoodImage())
                         .member(DiaryResponseDTO.MemberDTO.builder()
                                 .memberId(diary.getMember().getId())

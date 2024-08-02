@@ -24,6 +24,9 @@ public class Diary extends BaseEntity {
     @Column(nullable = false, length = 60)
     private String title;
 
+    @Column(nullable = false, length=100)
+    private String category;
+
     private boolean isPublic;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,6 +40,7 @@ public class Diary extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private AIQuestion aiQuestion;
+
 
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<Likes> likesList = new ArrayList<>();

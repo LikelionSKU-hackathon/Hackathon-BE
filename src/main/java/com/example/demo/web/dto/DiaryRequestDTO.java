@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DiaryRequestDTO {
+    private String category;
     private String title;
     private String content;
     private boolean isPublic;
