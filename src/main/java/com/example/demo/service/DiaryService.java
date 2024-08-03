@@ -140,6 +140,7 @@ public class DiaryService {
                 .title(diary.getTitle())
                 .content(diary.getContent())
                 .isPublic(diary.isPublic())
+                .category(diary.getCategory())
                 .memberUsername(diary.getMember().getUsername())
                 .likeCount(diary.getLikeCount())
                 .moodName(mood != null ? mood.getName() : null)
