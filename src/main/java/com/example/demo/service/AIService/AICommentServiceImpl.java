@@ -149,14 +149,20 @@ public class AICommentServiceImpl implements AICommentService {
 
         return aiQuestion1;
     }
-//    @Override
-//    public Diary generatedSpicyAIComment(Long diaryId){
-//        Diary diary = diaryRepository.findById(diaryId).orElseThrow();
-//        String content = diary.getContent();
-//        String title = diary.getTitle();
-//        String mood = diary.getMood().toString();
-//        String username = diary.getMember().getUsername();
+
+//@Override
+//public Diary generatedSpicyAIComment(Long diaryId){
+//    Diary diary = diaryRepository.findById(diaryId).orElseThrow();
+//    String content = diary.getContent();
+//    String title = diary.getTitle();
+//    String mood = diary.getMood().toString();
+//    String username = diary.getMember().getUsername();
 //
-//        String prompt = ""
-//    }
+//    String prompt = ""
+//}
+
 }
+
+
+
+
