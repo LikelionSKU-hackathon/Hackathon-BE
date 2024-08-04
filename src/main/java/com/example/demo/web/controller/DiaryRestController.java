@@ -17,7 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -124,8 +127,8 @@ public class DiaryRestController {
     }
     @GetMapping("/{diaryId}/iLiked")
     @Operation(summary = "좋아요 여부 확인 API", description = "특정 일기 ID에 대해 현재 로그인된 사용자의 좋아요 여부 확인")
-    public ResponseEntity<Boolean> getILiked(@PathVariable Long diaryId, Authentication authentication) {
-        boolean iLiked = diaryService.getILiked(diaryId, authentication);
-        return ResponseEntity.ok(iLiked);
+    public ResponseEntity<LikeResponseDTO> getILiked(@PathVariable Long diaryId, Authentication authentication) {
+        LikeResponseDTO likeResponseDTO = diaryService.getILiked(diaryId, authentication);
+        return ResponseEntity.ok(likeResponseDTO);
     }
 }
