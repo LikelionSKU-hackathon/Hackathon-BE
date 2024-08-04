@@ -52,4 +52,7 @@ public class Diary extends BaseEntity {
     private AIComment aiComment;  // 단일 AIComment
 
     private int likeCount; // 좋아요 갯수 필드 추가
+
+    @Transient
+    private boolean iLiked;
 }

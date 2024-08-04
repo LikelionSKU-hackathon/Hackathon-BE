@@ -40,23 +40,7 @@ public class DiaryRestController {
         DiaryResponseDTO diaryResponseDTO = diaryService.createDiary(diaryRequestDTO);
         return ResponseEntity.ok(diaryResponseDTO);
     }
-    @GetMapping("/question")
-    @Operation(summary = "AI 주제 조회 API", description = "특정 회원의 AI 주제 조회")
-    public ResponseEntity<DiaryResponseDTO.AIQuestionDTO> getAIQuestion(Authentication authentication) {
 
-        Long memberId = (Long) authentication.getPrincipal();
-        Optional<AIQuestion> aiQuestionOptional = aiCommentService.getAIQuestion(memberId);
-        if (!aiQuestionOptional.isPresent()) {
-            throw new RuntimeException("AI Question not found");
-        }
-        AIQuestion aiQuestion = aiQuestionOptional.get();
-        return ResponseEntity.ok(new DiaryResponseDTO.AIQuestionDTO(
-                aiQuestion.getId(),
-                memberId,
-                aiQuestion.getCategory(),
-                aiQuestion.getContent()
-        ));
-    }
 
     @PostMapping("/question/diaries")
     @Operation(summary = "AI 주제로 일기 작성 API", description = "특정 회원의 AI 주제로 새로운 일기 작성")
@@ -80,13 +64,6 @@ public class DiaryRestController {
         List<DiaryResponseDTO> diaryResponseDTOList = diaryService.getDiariesByMember(memberId);
         return ResponseEntity.ok(diaryResponseDTOList);
     }
-    @GetMapping("/{diaryId}/ai")
-    @Operation(summary = "AI 댓글 조회 API", description = "AI 댓글을 생성하고 조회하는 API")
-    public ApiResponse<DiaryResponseDTO.AiCommentResultDTO> aicomment(@PathVariable(name = "diaryId") Long diaryId) {
-        Diary diary = aiCommentService.generateAIComment(diaryId);
-        return ApiResponse.onSuccess(DiaryConverter.aiCommentResultDTO(diary));
-    }
-
     @GetMapping("/diaryList")
     @Operation(summary="더 많은 이야기 구경하기 API", description=" 다른 사용자들이 작성한 글을 조회하는 API")
     public ApiResponse<DiaryResponseDTO.PlusDiaryResultDTO> diaryList(){
@@ -94,7 +71,12 @@ public class DiaryRestController {
         log.info("다이어리 목록:{}",diaries);
         return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
     }
-
+    @GetMapping("/popular")
+    @Operation(summary = "역대 좋아요 수가 가장 많은 두 개의 일기 조회 API", description = "역대 좋아요 갯수가 가장 많은 두 개의 일기 조회")
+    public ApiResponse<DiaryResponseDTO.PlusDiaryResultDTO> getMostLikedDiaries() {
+        List<Diary> diaries = diaryService.getMostLikedDiaries();
+        return ApiResponse.onSuccess(DiaryConverter.diaryListDTO(diaries));
+    }
     @GetMapping("/month/{year}/{month}")
     @Operation(summary="이번 달 나의 쓰임 API(이모지 조회)", description=" 이번 달 사용자 일기의 기분을 모아보는 API")
     public ApiResponse<DiaryResponseDTO.EmojiResultDTO> emoji(@PathVariable(name = "year") int year,
@@ -133,17 +115,17 @@ public class DiaryRestController {
         likeService.removeLike(likeId);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/popular")
-    @Operation(summary = "역대 좋아요 수가 가장 많은 두 개의 일기 조회 API", description = "역대 좋아요 갯수가 가장 많은 두 개의 일기 조회")
-    public ResponseEntity<List<DiaryResponseDTO>> getMostLikedDiaries() {
-        List<DiaryResponseDTO> diaryResponseDTOs = diaryService.getMostLikedDiaries();
-        return ResponseEntity.ok(diaryResponseDTOs);
-    }
+
     @GetMapping("/pre-info/{memberId}")
     @Operation(summary = "일기 작성 전 정보 조회 API", description = "일기를 작성하기 전에 필요한 정보를 조회하는 API")
     public ApiResponse<DiaryResponseDTO.DiaryPreInfoDTO> getDiaryPreInfo(@PathVariable Long memberId) {
         DiaryResponseDTO.DiaryPreInfoDTO diaryPreInfoDTO = diaryService.getDiaryPreInfo(memberId);
         return ApiResponse.onSuccess(diaryPreInfoDTO);
     }
-
+    @GetMapping("/{diaryId}/iLiked")
+    @Operation(summary = "좋아요 여부 확인 API", description = "특정 일기 ID에 대해 현재 로그인된 사용자의 좋아요 여부 확인")
+    public ResponseEntity<Boolean> getILiked(@PathVariable Long diaryId, Authentication authentication) {
+        boolean iLiked = diaryService.getILiked(diaryId, authentication);
+        return ResponseEntity.ok(iLiked);
+    }
 }

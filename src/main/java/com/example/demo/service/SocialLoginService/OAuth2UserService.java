@@ -24,13 +24,16 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
+        // 엑세스 토큰을 가져오는 부분
+        String accessToken = oAuth2UserRequest.getAccessToken().getTokenValue(); // 엑세스 토큰 가져오기
+        log.info("Access Token: {}", accessToken); // 엑세스 토큰을 로그로 출력
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
 
         String oauthClientName = oAuth2UserRequest.getClientRegistration().getClientName();
         final String[] userEmail = new String[1];
         final String[] userName = new String[1];
 
-        // 전체 유저 정보 로그로 출력
+
         try {
             log.info("OAuth2 User Attributes: {}", new ObjectMapper().writeValueAsString(oAuth2User.getAttributes()));
         } catch (Exception e) {
