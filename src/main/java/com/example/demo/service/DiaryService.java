@@ -5,6 +5,7 @@ import com.example.demo.repository.*;
 import com.example.demo.web.dto.DiaryRequestDTO;
 import com.example.demo.web.dto.DiaryResponseDTO;
 import com.example.demo.service.AIService.AICommentService;
+import com.example.demo.web.dto.LikeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -198,7 +199,7 @@ public class DiaryService {
         return diaryRepository.findTop2ByOrderByLikeCountDesc();
     }
 
-    public boolean getILiked(Long diaryId, Authentication authentication) {
+    public LikeResponseDTO getILiked(Long diaryId, Authentication authentication) {
         Long memberId = (Long) authentication.getPrincipal();
         Optional<Diary> diaryOptional = diaryRepository.findById(diaryId);
         if (!diaryOptional.isPresent()) {
@@ -206,9 +207,19 @@ public class DiaryService {
         }
 
         Diary diary = diaryOptional.get();
-        boolean iLiked = likeRepository.findByDiaryAndMember(diary, memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"))).isPresent();
+        Optional<Likes> likeOptional = likeRepository.findByDiaryAndMember(diary, memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found")));
+
+        boolean iLiked = likeOptional.isPresent();
         diary.setILiked(iLiked);
 
-        return iLiked;
+        Likes like = likeOptional.orElse(null);
+        Long likeId = (like != null) ? like.getId() : null;
+
+        return LikeResponseDTO.builder()
+                .id(likeId)
+                .diaryId(diary.getId())
+                .memberId(memberId)
+                .iLiked(iLiked)
+                .build();
     }
 }
