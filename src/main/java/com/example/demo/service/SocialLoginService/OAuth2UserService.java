@@ -82,5 +82,3 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         return new CustomOAuth2User(oAuth2User, stringAttributes);
     }
 }
-
-
