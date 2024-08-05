@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -32,12 +31,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig {
 
     private final OAuth2UserService oAuth2UserService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
@@ -48,7 +46,7 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/v1/user/secure-endpoint")
                         .hasRole("USER")
-                        .requestMatchers("/api/v1/auth/login/oauth2/success")  // 이 라인을 추가하여 접근 허용
+                        .requestMatchers("http://localhost:5173/")
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
@@ -63,8 +61,7 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
-    // CORS 설정 (모든 도메인 오픈)
+    //cors 설정 (모든 도메인 오픈)
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -77,8 +74,7 @@ public class WebSecurityConfig {
 
         return source;
     }
-
-    // passwordEncoder를 통해 비밀번호 암호화
+    // passwordEncoder 를 통해 비밀번호 암호화
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
