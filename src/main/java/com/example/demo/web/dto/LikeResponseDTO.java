@@ -11,4 +11,5 @@ public class LikeResponseDTO {
     private Long id;
     private Long diaryId;
     private Long memberId;
+    private boolean iLiked;
 }
