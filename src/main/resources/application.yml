@@ -28,14 +28,14 @@ spring:
                     client-name: google
                     client-id: 534317406966-fr39qp43a9qoa87hd7hnveor4a3l8qdt.apps.googleusercontent.com
                     client-secret: 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
-                    redirect-uri: https://sub.skuhackathon.shop/login/oauth2/code/google
+                    redirect-uri: http://localhost:8080/login/oauth2/code/google
                     authorization-grant-type: authorization_code
                     scope: profile, email
                   naver:
                     client-name: naver
                     client-id: KwquDcvwFXUYH1NjOt6d
                     client-secret: w8Vsq_iCaM
-                    redirect-uri: https://sub.skuhackathon.shop/login/oauth2/code/naver
+                    redirect-uri: http://localhost:8080/login/oauth2/code/naver
                     authorization-grant-type: authorization_code
                     scope: name, email
                 provider:
@@ -68,4 +68,3 @@ openai:
   api:
     url: https://api.openai.com/v1/chat/completions
     key: ${AWS_OPENAI_KEY}
-

@@ -32,16 +32,13 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String authHeader = "Bearer " + token.getAccessToken();
         response.addHeader("Authorization", authHeader);
 
-
-
-
         // 로그 찍기
         log.info("OAuth2 로그인 성공 - 사용자: {}", customOAuth2User.getName());
         log.info("생성된 JWT 토큰: {}", token.getAccessToken());
         log.info("응답 헤더에 설정된 Authorization: {}", response.getHeader("Authorization"));
 
         // 리디렉션
-        response.sendRedirect("http://localhost:8080/");
+        response.sendRedirect("http://localhost:5173/");
     }
 }
 
