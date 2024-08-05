@@ -32,7 +32,7 @@ public class Member extends BaseEntity  {
     private String username;
 
     @Column(nullable = false, length = 40)
-    private String email;
+    private String email = "default@example.com";
 
     @Column(nullable = false, length = 50)
     private String ageGroup;

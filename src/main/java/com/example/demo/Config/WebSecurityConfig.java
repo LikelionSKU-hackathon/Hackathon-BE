@@ -31,7 +31,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig {
 
     private final OAuth2UserService oAuth2UserService;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
@@ -46,6 +45,8 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/v1/user/secure-endpoint")
                         .hasRole("USER")
+                        .requestMatchers("/api/v1/auth/login/oauth2/success")  // 이 라인을 추가하여 접근 허용
+                        .permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(endpoint -> endpoint
@@ -54,12 +55,15 @@ public class WebSecurityConfig {
                                 .baseUri("/login/oauth2/code/*"))
                         .userInfoEndpoint(endpoint -> endpoint
                                 .userService(oAuth2UserService))
-                        .successHandler(oAuth2LoginSuccessHandler))
+                        .successHandler((request, response, authentication) -> {
+                            request.getRequestDispatcher("/api/v1/auth/login/oauth2/success").forward(request, response);
+                        }))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-    //cors 설정 (모든 도메인 오픈)
+
+    // CORS 설정 (모든 도메인 오픈)
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -72,7 +76,8 @@ public class WebSecurityConfig {
 
         return source;
     }
-    // passwordEncoder 를 통해 비밀번호 암호화
+
+    // passwordEncoder를 통해 비밀번호 암호화
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
