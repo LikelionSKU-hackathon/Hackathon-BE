@@ -109,7 +109,7 @@ public class DiaryService {
                 .build();
 
         Diary savedDiary = diaryRepository.save(diary);
-        //aiCommentService.generateAIComment(savedDiary.getId());
+        aiCommentService.generateAIComment(savedDiary.getId());
 
         return DiaryResponseDTO.builder()
                 .id(savedDiary.getId())

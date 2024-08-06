@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface AICommentService {
     AIQuestion generateAIQuestion(Long memberId);
     Diary generateAIComment(Long diaryId);
+    Diary generateSpicyAIComment(Long diaryId);
+    Diary getDiaryWithSpicyComment(Long diaryId);
 }
