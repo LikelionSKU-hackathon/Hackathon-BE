@@ -27,7 +27,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         JwtToken token = jwtProvider.generateToken(customOAuth2User);
 
         // 토큰을 URL 쿼리 파라미터로 설정
-        String redirectUrl = "http://localhost:5173/oauth2/redirect?token=" + token.getAccessToken();
+        String redirectUrl = "https://ssudamssudam.netlify.app/oauth2/redirect?token=" + token.getAccessToken();
         response.sendRedirect(redirectUrl);
     }
 }
