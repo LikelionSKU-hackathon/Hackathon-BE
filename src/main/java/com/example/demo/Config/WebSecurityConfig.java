@@ -46,6 +46,8 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/v1/user/secure-endpoint")
                         .hasRole("USER")
+                        .requestMatchers("http://localhost:5173/")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(endpoint -> endpoint

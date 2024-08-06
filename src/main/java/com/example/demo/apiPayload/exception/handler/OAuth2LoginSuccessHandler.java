@@ -26,12 +26,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         JwtToken token = jwtProvider.generateToken(customOAuth2User);
 
-        // Authorization 헤더 설정
-        String authHeader = "Bearer " + token.getAccessToken();
-        response.addHeader("Authorization", authHeader);
-
-        // 리디렉션
-        response.sendRedirect("/health");
+        // 토큰을 URL 쿼리 파라미터로 설정
+        String redirectUrl = "https://ssudamssudam.netlify.app/oauth2/redirect?token=" + token.getAccessToken();
+        response.sendRedirect(redirectUrl);
     }
 }
-

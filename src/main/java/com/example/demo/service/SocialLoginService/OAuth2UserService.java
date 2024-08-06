@@ -33,7 +33,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         final String[] userEmail = new String[1];
         final String[] userName = new String[1];
 
-
         try {
             log.info("OAuth2 User Attributes: {}", new ObjectMapper().writeValueAsString(oAuth2User.getAttributes()));
         } catch (Exception e) {
@@ -52,6 +51,14 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             userEmail[0] = (String) kakaoAccount.get("email");
             Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
             userName[0] = (String) profile.get("nickname");
+        }
+
+        // 기본값 설정
+        if (userEmail[0] == null) {
+            userEmail[0] = "default@example.com";
+        }
+        if (userName[0] == null) {
+            userName[0] = "Unknown User";
         }
 
         Member member = memberRepository.findByEmail(userEmail[0]).orElseGet(() -> {
@@ -75,4 +82,3 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         return new CustomOAuth2User(oAuth2User, stringAttributes);
     }
 }
-
