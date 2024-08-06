@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
-    List<Diary> findByIsPublicTrue();
+    List<Diary> findByIsPublicTrueOrderByCreatedAtDesc();
 
     @Query("SELECT d FROM Diary d WHERE d.member.id = :memberId AND FUNCTION('MONTH', d.createdAt) = :month AND FUNCTION('YEAR', d.createdAt) = :year")
     List<Diary> findByMemberIdAndMonth(@Param("memberId") Long memberId, @Param("month") int month, @Param("year") int year);

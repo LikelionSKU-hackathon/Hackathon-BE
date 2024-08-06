@@ -158,11 +158,13 @@ public class AICommentServiceImpl implements AICommentService {
 
         String prompt = "You are an AI text generator that creates harsh and realistic comments for a diary entry. " +
                 "Your response should be critical and provide realistic advice, even if it may hurt the user's feelings.\n\n" +
+                "Your answer should be answer in Korean "+
                 "The entire response must be within 300 characters.\n\n"+
                 "username: " + username + "\n" +
                 "feel: " + mood + "\n" +
                 "diary topic: " + title + "\n" +
-                "diary content: " + content;
+                "diary content: " + content + "\n" +
+                "Please respond in Korean.";
 
         ChatRequestDTO chatRequest = new ChatRequestDTO(model, prompt);
         HttpEntity<ChatRequestDTO> requestEntity = new HttpEntity<>(chatRequest, httpHeaders);

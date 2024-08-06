@@ -42,6 +42,7 @@ public class MemberCommandServiceImpl implements MemberCommandService{
         String profileImageUrl = s3Manager.uploadFile(request.getProfileImage()); //s3Manager를 통해 file 업로드
         String encodedPassword = passwordEncoder.encode(request.getPassword()); //passwordEncoder를 통해 비밀번호 암호화
         Member newMember = MemberConverter.toMember(request, encodedPassword, profileImageUrl); // 새로운 멤버 생성
+        newMember.setComplete(true);
         return memberRepository.save(newMember); // 저장
     }
     //소셜 회원가입
@@ -51,6 +52,7 @@ public class MemberCommandServiceImpl implements MemberCommandService{
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         String profileImageUrl = s3Manager.uploadFile(request.getProfileImage()); //s3Manager를 통해 file 업로드
         MemberConverter.toSocialMember(request, member, profileImageUrl); //social Member 업데이트
+        member.setComplete(true);
         return memberRepository.save(member); //저장
     }
     //로그인

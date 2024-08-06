@@ -44,6 +44,7 @@ public class MemberConverter {
         member.setAgeGroup(request.getAge_group());
         member.setProfileImage(profileImageUrl);
 
+
     }
     //Mypage controller를 위함
     public static MemberResponseDTO.MyPageDTO toMypageDTO(Member member) {

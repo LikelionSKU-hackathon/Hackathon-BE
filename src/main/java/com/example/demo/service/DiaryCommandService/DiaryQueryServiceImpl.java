@@ -18,7 +18,7 @@ public class DiaryQueryServiceImpl implements DiaryQueryService{
     private final DiaryConverter diaryConverter;
     @Override
     public List<Diary> getDiaryList (){
-        return diaryRepository.findByIsPublicTrue();
+        return diaryRepository.findByIsPublicTrueOrderByCreatedAtDesc();
     }
 
     @Transactional(readOnly = true)
