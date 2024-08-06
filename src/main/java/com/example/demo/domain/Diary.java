@@ -51,6 +51,9 @@ public class Diary extends BaseEntity {
     @OneToOne(mappedBy = "diary", cascade = CascadeType.ALL)
     private AIComment aiComment;  // 단일 AIComment
 
+    @OneToOne(mappedBy = "diary", cascade = CascadeType.ALL)
+    private SpicyAIComment spicyAiComment;
+
     private int likeCount; // 좋아요 갯수 필드 추가
 
     @Transient

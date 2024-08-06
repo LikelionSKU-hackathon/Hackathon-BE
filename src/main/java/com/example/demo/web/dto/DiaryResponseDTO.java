@@ -48,6 +48,18 @@ public class DiaryResponseDTO {
 
 
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SpicyAiCommentResultDTO{
+        Long moodId;
+        String moodName;
+        String title;
+        String content;
+        List<String> spicyAiCommentList;
+    }
     @Builder
     @Getter
     @NoArgsConstructor
@@ -98,7 +110,7 @@ public class DiaryResponseDTO {
         Long questionId;
         Long memberId;
         String category;
-        String content;
+        String title;
     }
 
     @Builder

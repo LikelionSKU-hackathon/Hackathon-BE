@@ -28,6 +28,15 @@ public class DiaryConverter {
                 .content(diary.getContent())
                 .build();
     }
+    public static DiaryResponseDTO.SpicyAiCommentResultDTO spicyAiCommentResultDTO(Diary diary){
+        return DiaryResponseDTO.SpicyAiCommentResultDTO.builder()
+                .moodId(diary.getMood().getId())
+                .moodName(diary.getMood().getName())
+                .spicyAiCommentList(diary.getSpicyAiComment() != null ? List.of(diary.getSpicyAiComment().getContent()) : null) // 단일 SpicyAIComment 처리
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .build();
+    }
     // 더 많은 이야기 구경하기( diaryList에  diaryId, title, content, mood, member(id,name,profile, keywordList) 등 일부 내용만 받도록 설정)
     public static DiaryResponseDTO.PlusDiaryResultDTO diaryListDTO(List<Diary> diaries) {
         List<DiaryResponseDTO.DiaryDTO> diaryDTOList = diaries.stream()
@@ -60,7 +69,7 @@ public class DiaryConverter {
         return DiaryResponseDTO.AIQuestionDTO.builder()
                 .questionId(aiQuestion.getId())
                 .category(aiQuestion.getCategory())
-                .content(aiQuestion.getContent())
+                .title(aiQuestion.getContent())
                 .memberId(memberId)
                 .build();
     }

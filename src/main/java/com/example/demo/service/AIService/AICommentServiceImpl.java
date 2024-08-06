@@ -3,10 +3,7 @@ package com.example.demo.service.AIService;
 import com.example.demo.apiPayload.code.status.ErrorStatus;
 import com.example.demo.apiPayload.exception.handler.AiHandler;
 import com.example.demo.apiPayload.exception.handler.MemberHandler;
-import com.example.demo.domain.AIComment;
-import com.example.demo.domain.AIQuestion;
-import com.example.demo.domain.Diary;
-import com.example.demo.domain.Member;
+import com.example.demo.domain.*;
 import com.example.demo.domain.mapping.MemberQuestion;
 import com.example.demo.repository.*;
 import com.example.demo.web.dto.ChatDTO.ChatRequestDTO;
@@ -35,6 +32,7 @@ public class AICommentServiceImpl implements AICommentService {
     @Value("${openai.api.url}")
     private String apiUrl;
 
+    private final SpicyAICommentRepository spicyAICommentRepository;
     private final AICommentRepository aiCommentRepository;
     private final AIQuestionRepository aiQuestionRepository;
     private final MemberQuestionRepository memberQuestionRepository;
@@ -57,6 +55,7 @@ public class AICommentServiceImpl implements AICommentService {
                 "You should write your answers based on the input information (feel, diary topic, diary content) into upward, empathy, solution, and support, and you can't leave any of them out. " +
                 "Each part (consolation, empathy, solution, support) should be written in 2 lines and the context of the 4 parts should be connected. " +
                 "You have to combine each part in order to make it a single answer and return it, but when you make it a single answer, there should be no line change between each part.\n\n" +
+                "The entire response must be within 300 characters.\n\n"+
                 "username: "+username+ "\n"+
                 "feel: " + mood + "\n" +
                 "diary topic: " + title + "\n" +
@@ -149,19 +148,50 @@ public class AICommentServiceImpl implements AICommentService {
 
         return aiQuestion1;
     }
+    @Override
+    public Diary generateSpicyAIComment(Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow();
+        String content = diary.getContent();
+        String title = diary.getTitle();
+        String mood = diary.getMood().toString();
+        String username = diary.getMember().getUsername();
 
-//@Override
-//public Diary generatedSpicyAIComment(Long diaryId){
-//    Diary diary = diaryRepository.findById(diaryId).orElseThrow();
-//    String content = diary.getContent();
-//    String title = diary.getTitle();
-//    String mood = diary.getMood().toString();
-//    String username = diary.getMember().getUsername();
-//
-//    String prompt = ""
-//}
+        String prompt = "You are an AI text generator that creates harsh and realistic comments for a diary entry. " +
+                "Your response should be critical and provide realistic advice, even if it may hurt the user's feelings.\n\n" +
+                "The entire response must be within 300 characters.\n\n"+
+                "username: " + username + "\n" +
+                "feel: " + mood + "\n" +
+                "diary topic: " + title + "\n" +
+                "diary content: " + content;
 
+        ChatRequestDTO chatRequest = new ChatRequestDTO(model, prompt);
+        HttpEntity<ChatRequestDTO> requestEntity = new HttpEntity<>(chatRequest, httpHeaders);
+
+        ChatResponseDTO chatResponseDTO = restTemplate.postForObject(apiUrl, requestEntity, ChatResponseDTO.class);
+
+        if (chatResponseDTO == null || chatResponseDTO.getChoices() == null || chatResponseDTO.getChoices().isEmpty()) {
+            throw new AiHandler(ErrorStatus.AI_RESPONSE_NULL_OR_EMPTY);
+        }
+
+        String spicyAiComment = chatResponseDTO.getChoices().get(0).getMessage().getContent();
+
+        SpicyAIComment newSpicyComment = SpicyAIComment.builder()
+                .content(spicyAiComment)
+                .diary(diary)
+                .build();
+
+        spicyAICommentRepository.save(newSpicyComment);
+        return diary;
+    }
+
+    @Override
+    public Diary getDiaryWithSpicyComment(Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow();
+        return diary;
+    }
 }
+
+
 
 
 
