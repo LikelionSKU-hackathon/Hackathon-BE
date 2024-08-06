@@ -45,6 +45,7 @@ public class MemberRequestDTO {
         String age_group;
 
         private MultipartFile profileImage;
+
     }
 
     @Getter

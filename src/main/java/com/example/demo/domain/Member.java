@@ -31,8 +31,8 @@ public class Member extends BaseEntity  {
     @Column(nullable = false, length = 40)
     private String username;
 
-    @Column(nullable = false, length = 40)
-    private String email = "default@example.com";
+    @Column(nullable = true, length = 40)
+    private String email;
 
     @Column(nullable = false, length = 50)
     private String ageGroup;
@@ -49,6 +49,9 @@ public class Member extends BaseEntity  {
 
     @Column(nullable = true, length =255)
     private String profileImage;
+
+    @Column(nullable = false)
+    private boolean isComplete;
 
     @OneToMany(mappedBy ="member", cascade= CascadeType.ALL, fetch=FetchType.LAZY)
     private  List<MemberKeyword> memberKeywordList = new ArrayList<>();
