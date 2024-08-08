@@ -47,9 +47,11 @@
 
 
 ## 🛠 ERD
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/a312d5f2-eacf-4303-8103-7fd065525674/2f3f668e-a112-48ef-a062-d813bb3ef0ab/Untitled.png)
+
+![Untitled (7)](https://github.com/user-attachments/assets/34764034-c40d-4651-abe6-408ce624868e)
 
 
 ## 🛠 API 명세서
 
 https://periwinkle-digit-9cc.notion.site/API-068b4381514648ab832db099474b4734
+
